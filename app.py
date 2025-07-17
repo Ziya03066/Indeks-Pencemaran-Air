@@ -1,96 +1,86 @@
 import streamlit as st
-import base64
 
-# 🔧 Fungsi background
-def set_background(image_path):
-    with open(image_path, "rb") as image_file:
-        encoded = base64.b64encode(image_file.read()).decode()
-    background = f"""
-    <style>
-    .stApp {{
-        background-image: url("data:image/jpg;base64,{encoded}");
-        background-size: cover;
-        background-attachment: fixed;
-        background-repeat: no-repeat;
-    }}
-    </style>
+# 🌅 Background dari GitHub 
+st.markdown(
     """
-    st.markdown(background, unsafe_allow_html=True)
+    <style>
+    .stApp {
+        background-image: url("https://raw.githubusercontent.com/ziyausername/streamlit-air-index/main/background.jpg");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: #ffffff;
+    }
+    .block-container {
+        background-color: rgba(0, 0, 0, 0.6);
+        padding: 2rem;
+        border-radius: 1rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
-# 🔧 Pasang background
-set_background("background.jpg")
+# 🎯 Judul dan Deskripsi
+st.title("🌊 Indeks Pencemaran Air")
+st.subheader("Menilai kualitas air berdasarkan parameter fisik dan kimia")
 
-# ========================== TAMPILAN ==========================
-st.markdown("<h1 style='text-align:center; color:#ffffff;'>💧 Indeks Pencemaran Air</h1>", unsafe_allow_html=True)
-st.markdown("<h4 style='text-align:center; color:#eeeeee;'>Cintai Bumi, Lindungi Air Kita 🌍</h4>", unsafe_allow_html=True)
-st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("""
+Indeks Pencemaran Air (IPA) adalah indikator komposit yang digunakan untuk menilai tingkat pencemaran suatu badan air. IPA dihitung berdasarkan beberapa parameter kualitas air, dan hasilnya dikategorikan menjadi status air: **baik, sedang, buruk, atau sangat tercemar**.
 
-# ✅ Panel edukasi
-with st.expander("📘 Apa itu Indeks Pencemaran Air?"):
+""")
+
+st.markdown("---")
+
+# 📋 Penjelasan Parameter
+with st.expander("📘 Penjelasan Setiap Parameter"):
     st.markdown("""
-        Indeks Pencemaran Air digunakan untuk mengetahui sejauh mana kualitas air telah tercemar oleh berbagai parameter 
-        seperti pH, suhu, BOD, COD, TSS, dan mikroorganisme. Website ini membantu menilai kondisi air berdasarkan parameter yang Anda masukkan.
+- **pH**: Menunjukkan tingkat keasaman atau kebasaan air. Ideal: 6.5 – 8.5  
+- **Suhu**: Berpengaruh pada kelarutan oksigen dan reaksi biologis  
+- **DO (Oksigen Terlarut)**: Kunci kehidupan akuatik. Standar minimal: >4 mg/L  
+- **BOD (Biological Oxygen Demand)**: Kebutuhan oksigen mikroba untuk mengurai bahan organik  
+- **COD (Chemical Oxygen Demand)**: Kebutuhan oksigen kimiawi untuk oksidasi zat organik dan anorganik  
+- **TSS (Total Suspended Solid)**: Padatan tersuspensi dalam air. Tinggi TSS bisa menurunkan kualitas air  
+- **Logam Berat**: Toksik jika melebihi ambang batas (misalnya Hg, Pb, Cd)  
+- **E-Coli**: Indikator pencemaran biologis (mikroorganisme patogen)  
     """)
 
-st.markdown("<br>", unsafe_allow_html=True)
+# 📏 SNI Acuan
+with st.expander("📌 Acuan SNI (Standar Nasional Indonesia)"):
+    st.markdown("""
+- **SNI 6989.65:2009** → Parameter pH  
+- **SNI 6989.57:2008** → BOD  
+- **SNI 6989.2:2009** → COD  
+- **SNI 6989.1:2019** → Suhu  
+- **SNI 6989.14:2009** → DO  
+- **SNI 6989.3:2009** → TSS  
+- **SNI 6989.54:2008** → Logam Berat (sesuai jenis)  
+- **SNI 2897:2008** → E-Coli dan mikrobiologi air  
+    """)
 
-# ========================== FORM INPUT ==========================
-with st.form("form_input"):
-    col1, col2 = st.columns(2)
+st.markdown("---")
 
-    with col1:
-        ph = st.number_input("pH", min_value=0.0, max_value=14.0, step=0.1, format="%.2f")
-        suhu = st.number_input("Suhu (°C)", step=0.1, format="%.2f")
-        do = st.number_input("Oksigen Terlarut / DO (mg/L)", step=0.1, format="%.2f")
-        bod = st.number_input("BOD (mg/L)", step=0.1, format="%.2f")
+# 🧮 Input Parameter
+st.markdown("📝 Masukkan parameter kualitas air berikut:")
 
-    with col2:
-        cod = st.number_input("COD (mg/L)", step=0.1, format="%.2f")
-        tss = st.number_input("TSS (mg/L)", step=0.1, format="%.2f")
-        logam_berat = st.number_input("Logam Berat (mg/L)", step=0.01, format="%.2f")
-        ecoli = st.number_input("E-Coli (Jumlah/100mL)", step=1.0, format="%.0f")
+ph = st.number_input("pH", min_value=0.0, max_value=14.0, step=0.1)
+temp = st.number_input("Suhu (°C)", min_value=-10.0, max_value=50.0, step=0.1)
+do = st.number_input("Oksigen Terlarut (DO, mg/L)", min_value=0.0, max_value=20.0, step=0.1)
+bod = st.number_input("BOD (mg/L)", min_value=0.0, max_value=100.0, step=0.1)
+cod = st.number_input("COD (mg/L)", min_value=0.0, max_value=100.0, step=0.1)
+tss = st.number_input("TSS (mg/L)", min_value=0.0, max_value=1000.0, step=0.1)
+logam = st.number_input("Logam Berat (mg/L)", min_value=0.0, max_value=10.0, step=0.1)
+ecoli = st.number_input("E-Coli (CFU/100mL)", min_value=0, max_value=10000, step=1)
 
-    submitted = st.form_submit_button("🔍 Analisis Sekarang")
+# 🧠 Hitung Indeks
+def calculate_index(*args):
+    valid_values = [val for val in args if val != 0]
+    if valid_values:
+        return sum(valid_values) / len(valid_values)
+    return None
 
-# ========================== OUTPUT ==========================
-if submitted:
-    data = {
-        "pH": ph if ph != 0.0 else None,
-        "Suhu": suhu if suhu != 0.0 else None,
-        "DO": do if do != 0.0 else None,
-        "BOD": bod if bod != 0.0 else None,
-        "COD": cod if cod != 0.0 else None,
-        "TSS": tss if tss != 0.0 else None,
-        "Logam Berat": logam_berat if logam_berat != 0.0 else None,
-        "E-Coli": ecoli if ecoli != 0.0 else None,
-    }
-
-    nilai_terisi = [v for v in data.values() if v is not None]
-
-    if nilai_terisi:
-        indeks = sum(nilai_terisi) / len(nilai_terisi)
-        if indeks < 20:
-            status, color = "💚 Baik", "#3CB371"
-        elif indeks < 50:
-            status, color = "🟡 Sedang", "#F4D03F"
-        elif indeks < 80:
-            status, color = "🟠 Tercemar", "#E67E22"
-        else:
-            status, color = "🔴 Sangat Tercemar", "#E74C3C"
-
-        st.markdown(f"""
-            <div style="padding:20px; background-color:{color}; border-radius:10px;">
-                <h3 style="color:white;">Hasil Indeks: {indeks:.2f}</h3>
-                <h4 style="color:white;">Status: {status}</h4>
-            </div>
-        """, unsafe_allow_html=True)
-    else:
-        st.warning("⚠️ Masukkan minimal satu parameter untuk analisis.")
-
-# ========================== FOOTER ==========================
-st.markdown("""
-<hr style="border:0.5px solid white">
-<p style="text-align:center; color:lightgrey;">
-    © 2025 | Dibuat dengan ❤️ oleh Kamu yang peduli lingkungan
-</p>
-""", unsafe_allow_html=True)
+index = calculate_index(ph, temp, do, bod, cod, tss, logam, ecoli)
+if index is not None:
+    st.success(f"💧 Indeks Pencemaran Air: {index:.2f}")
+else:
+    st.warning("⚠️ Isi minimal satu parameter untuk menghitung indeks.")
