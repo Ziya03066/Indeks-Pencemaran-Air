@@ -47,6 +47,73 @@ st.markdown("<br>", unsafe_allow_html=True)
 
 # === Buka container transparan ===
 st.markdown("<div class='main-container'>", unsafe_allow_html=True)
+with st.container():
+    st.markdown("""
+    <div class='main-container'>
+        <h3>🧠 Apa itu Indeks Pencemaran Air?</h3>
+        <p>Indeks Pencemaran Air (IPA) adalah indikator untuk mengetahui tingkat pencemaran suatu badan air berdasarkan parameter fisik, kimia, dan biologi. IPA digunakan untuk menentukan status mutu air: <b>Baik</b>, <b>Sedang</b>, <b>Tercemar</b>, atau <b>Sangat Tercemar</b>.</p>
+
+        <h4>📌 Referensi:</h4>
+        <ul>
+            <li><b>PP No. 22 Tahun 2021</b> tentang Perlindungan & Pengelolaan Lingkungan</li>
+            <li><b>PP No. 20 Tahun 1990</b> tentang Pengendalian Pencemaran Air</li>
+            <li><b>SNI 6989 series</b> untuk pengujian kualitas air</li>
+        </ul>
+
+        <h3>📊 Parameter Kualitas Air & Baku Mutunya:</h3>
+        <ul>
+            <li><b>pH (Keasaman)</b>  
+                <ul>
+                    <li>Mengukur keseimbangan asam-basa air</li>
+                    <li>💡 Baku mutu: <b>6.5 - 8.5</b></li>
+                </ul>
+            </li>
+            <li><b>Suhu</b>  
+                <ul>
+                    <li>Mempengaruhi kelarutan oksigen</li>
+                    <li>💡 Baku mutu: Maks. kenaikan 3°C dari suhu alami</li>
+                </ul>
+            </li>
+            <li><b>DO (Oksigen Terlarut)</b>  
+                <ul>
+                    <li>Dibutuhkan makhluk hidup air</li>
+                    <li>💡 Baku mutu: > 5 mg/L</li>
+                </ul>
+            </li>
+            <li><b>BOD</b>  
+                <ul>
+                    <li>Mengukur kebutuhan oksigen oleh mikroba</li>
+                    <li>💡 Baku mutu: < 3 mg/L</li>
+                </ul>
+            </li>
+            <li><b>COD</b>  
+                <ul>
+                    <li>Jumlah oksigen yang dibutuhkan untuk oksidasi bahan organik/anorganik</li>
+                    <li>💡 Baku mutu: < 10 mg/L</li>
+                </ul>
+            </li>
+            <li><b>TSS</b>  
+                <ul>
+                    <li>Padatan tersuspensi seperti lumpur, pasir</li>
+                    <li>💡 Baku mutu: < 50 mg/L</li>
+                </ul>
+            </li>
+            <li><b>Logam Berat</b>  
+                <ul>
+                    <li>Logam berbahaya (Pb, Hg, Cr, Cd)</li>
+                    <li>💡 Contoh ambang batas: Pb < 0.03 mg/L, Hg < 0.002 mg/L, Cr⁶⁺ < 0.05 mg/L</li>
+                </ul>
+            </li>
+            <li><b>E. coli</b>  
+                <ul>
+                    <li>Parameter E. coli mengacu pada uji keberadaan dan jumlah bakteri <i>Escherichia coli</i> dalam suatu sampel air atau makanan.</li>
+                    <li>E. coli adalah bakteri indikator yang menunjukkan adanya pencemaran oleh limbah tinja, dan bisa menjadi penyebab penyakit seperti diare jika terdapat dalam jumlah tinggi.</li>
+                    <li>💡 Baku mutu: <b>0 JML/100 mL</b></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
 
 # === Panel penjelasan ===
 with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP No. 22/2021, PP No. 20/1990, SNI)"):
