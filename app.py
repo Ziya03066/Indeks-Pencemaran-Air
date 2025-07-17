@@ -2,7 +2,7 @@ import streamlit as st
 import base64
 import os
 
-# ========== Fungsi background dari gambar ==========
+# === Fungsi background dari gambar ===
 def set_background(image_path):
     with open(image_path, "rb") as image_file:
         encoded = base64.b64encode(image_file.read()).decode()
@@ -18,39 +18,37 @@ def set_background(image_path):
     """
     st.markdown(css, unsafe_allow_html=True)
 
-# ========== CSS tambahan untuk lapisan gelap transparan ==========
+# === CSS transparan untuk konten utama ===
 st.markdown("""
     <style>
     .main-container {
-        background-color: rgba(0, 0, 0, 0.55); /* lapisan gelap transparan */
+        background-color: rgba(0, 0, 0, 0.55);
         padding: 25px;
         border-radius: 15px;
         color: white;
         margin-top: 20px;
     }
-
     .main-container h2, .main-container h3, .main-container h4,
     .main-container p, .main-container li {
         color: white !important;
     }
-
     .stApp h1 {
         background-color: transparent;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# ========== Pasang background ==========
+# === Pasang background ===
 set_background("turtle.jpg")
 
-# ========== Judul ==========
+# === Judul utama (di luar lapisan transparan) ===
 st.markdown("<h1 style='text-align:center; color:white;'>💧 Indeks Pencemaran Air</h1>", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
 
-# ========== Awal konten utama dengan lapisan transparan ==========
+# === Buka container transparan ===
 st.markdown("<div class='main-container'>", unsafe_allow_html=True)
 
-# ========== Panel Penjelasan ==========
+# === Panel penjelasan ===
 with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP No. 22/2021, PP No. 20/1990, SNI)"):
     st.markdown("""
     ### 🧠 Apa itu Indeks Pencemaran Air?
@@ -97,12 +95,12 @@ with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP
         - Cr⁶⁺: < 0.05 mg/L
 
     **8. E-Coli**  
-    - E. coli mengacu pada uji keberadaan dan jumlah bakteri *Escherichia coli* dalam suatu sampel air atau makanan.
-    - E. coli adalah bakteri indikator yang menunjukkan adanya pencemaran oleh limbah tinja, dan bisa menjadi penyebab penyakit seperti diare jika terdapat dalam jumlah tinggi.
+    - E. coli mengacu pada uji keberadaan dan jumlah bakteri *Escherichia coli* dalam suatu sampel air atau makanan.  
+    - E. coli adalah bakteri indikator yang menunjukkan adanya pencemaran oleh limbah tinja, dan bisa menjadi penyebab penyakit seperti diare jika terdapat dalam jumlah tinggi.  
     - 💡 Baku mutu: **0 JML/100 mL**
     """)
 
-# ========== Form Input ==========
+# === Form Input Parameter ===
 with st.form("form_input"):
     col1, col2 = st.columns(2)
 
@@ -120,7 +118,7 @@ with st.form("form_input"):
 
     submitted = st.form_submit_button("🔍 Analisis Sekarang")
 
-# ========== Perhitungan Indeks ==========
+# === Perhitungan Indeks ===
 if submitted:
     data = {
         "pH": ph if ph != 0.0 else None,
@@ -155,13 +153,13 @@ if submitted:
     else:
         st.warning("⚠️ Masukkan minimal satu parameter untuk analisis.")
 
-# ========== Footer ==========
+# === Footer ===
 st.markdown("""
 <hr style="border:0.5px solid white">
 <p style="text-align:center; color:lightgrey;">
-    © 2025 | Dibuat oleh Mahasiswa Peduli Lingkungan 💧
+    © 2025 | Dibuat oleh Mahasiswa Kelompok 11 Logika dan Pemrograman Komputer 💧
 </p>
 """, unsafe_allow_html=True)
 
-# ========== Tutup div utama ==========
+# === Tutup div lapisan transparan ===
 st.markdown("</div>", unsafe_allow_html=True)
