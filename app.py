@@ -18,7 +18,7 @@ def set_background(image_path):
     st.markdown(css, unsafe_allow_html=True)
 
 # 🔧 Pasang gambar latar belakang
-set_background("background.jpg")
+set_background("turtle.jpg")
 
 # === Header / Judul ===
 st.markdown("<h1 style='text-align:center; color:white;'>💧 Indeks Pencemaran Air</h1>", unsafe_allow_html=True)
