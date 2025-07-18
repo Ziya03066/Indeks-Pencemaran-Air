@@ -136,22 +136,24 @@ if submitted:
     if nilai_terisi:
         indeks = sum(nilai_terisi) / len(nilai_terisi)
         if indeks < 20:
-            status, color = "💚 Baik", "#2ECC71"
-        elif indeks < 50:
-            status, color = "🟡 Sedang", "#F4D03F"
-        elif indeks < 80:
-            status, color = "🟠 Tercemar", "#E67E22"
-        else:
-            status, color = "🔴 Sangat Tercemar", "#E74C3C"
+    status = "💚 Baik"
+    bg_color = "rgba(46, 204, 113, 0.7)"  # Hijau transparan
+elif indeks < 50:
+    status = "🟡 Sedang"
+    bg_color = "rgba(241, 196, 15, 0.7)"  # Kuning transparan
+elif indeks < 80:
+    status = "🟠 Tercemar"
+    bg_color = "rgba(230, 126, 34, 0.7)"  # Oranye transparan
+else:
+    status = "🔴 Sangat Tercemar"
+    bg_color = "rgba(231, 76, 60, 0.7)"   # Merah transparan
 
-        st.markdown(f"""
-            <div style="padding:20px; background-color:{color}; border-radius:10px;">
-                <h3 style="color:white;">Hasil Indeks Pencemaran: {indeks:.2f}</h3>
-                <h4 style="color:white;">Status: {status}</h4>
-            </div>
-        """, unsafe_allow_html=True)
-    else:
-        st.warning("⚠️ Masukkan minimal satu parameter untuk analisis.")
+st.markdown(f"""
+    <div style="padding:20px; background-color:{bg_color}; border-radius:10px;">
+        <h4 style="color:white;">Hasil Indeks Pencemaran: {indeks:.2f}</h4>
+        <h5 style="color:white;">Status: {status}</h5>
+    </div>
+""", unsafe_allow_html=True)
 
 # === Footer ===
 st.markdown("""
