@@ -42,9 +42,57 @@ st.markdown("<h1 style='text-align:center; color:white;'>💧 Indeks Pencemaran 
 st.markdown("<br>", unsafe_allow_html=True)
 st.markdown("<div class='main-container'>", unsafe_allow_html=True)
 
-# === Penjelasan (sama seperti sebelumnya) ===
+# === Panel penjelasan ===
 with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP No. 22/2021, PP No. 20/1990, SNI)"):
-    st.markdown("""[...penjelasan sebelumnya tetap...]""")  # kamu bisa isi ulang dari versi sebelumnya
+    st.markdown("""
+    ### 🧠 Apa itu Indeks Pencemaran Air?
+    Indeks Pencemaran Air (IPA) adalah indikator untuk mengetahui tingkat pencemaran suatu badan air berdasarkan parameter fisik, kimia, dan biologi. IPA digunakan untuk menentukan status mutu air: **Baik**, **Sedang**, **Tercemar**, atau **Sangat Tercemar**.
+
+    #### 📌 Referensi:
+    - **PP No. 22 Tahun 2021** tentang Perlindungan & Pengelolaan Lingkungan
+    - **PP No. 20 Tahun 1990** tentang Pengendalian Pencemaran Air
+    - **SNI 6989 series** untuk pengujian kualitas air
+
+    ---
+
+    ### 📊 Parameter Kualitas Air & Baku Mutunya:
+
+    **1. pH (Keasaman)**  
+    - Mengukur keseimbangan asam-basa air  
+    - 💡 Baku mutu: **6.5 - 8.5**
+
+    **2. Suhu**  
+    - Mempengaruhi kelarutan oksigen  
+    - 💡 Baku mutu: Maks. kenaikan 3°C dari suhu alami
+
+    **3. DO (Oksigen Terlarut)**  
+    - Dibutuhkan makhluk hidup air  
+    - 💡 Baku mutu: **> 5 mg/L**
+
+    **4. BOD (Biochemical Oxygen Demand)**  
+    - Mengukur kebutuhan oksigen oleh mikroba  
+    - 💡 Baku mutu: **< 3 mg/L**
+
+    **5. COD (Chemical Oxygen Demand)**  
+    - Jumlah oksigen yang dibutuhkan untuk oksidasi bahan organik/anorganik  
+    - 💡 Baku mutu: **< 10 mg/L**
+
+    **6. TSS (Total Suspended Solid)**  
+    - Padatan tersuspensi seperti lumpur, pasir  
+    - 💡 Baku mutu: **< 50 mg/L**
+
+    **7. Logam Berat (Pb, Hg, Cr, Cd)**  
+    - Zat beracun berbahaya bahkan pada dosis kecil  
+    - 💡 Contoh ambang batas:
+        - Pb: < 0.03 mg/L  
+        - Hg: < 0.002 mg/L  
+        - Cr⁶⁺: < 0.05 mg/L
+
+    **8. E-Coli**  
+    - Parameter E. coli mengacu pada uji keberadaan dan jumlah bakteri *Escherichia coli* dalam suatu sampel air atau makanan.  
+    - E. coli adalah bakteri indikator yang menunjukkan adanya pencemaran oleh limbah tinja, dan bisa menjadi penyebab penyakit seperti diare jika terdapat dalam jumlah tinggi.  
+    - 💡 Baku mutu: **0 JML/100 mL**
+    """)
 
 # === Input Form ===
 with st.form("form_input"):
