@@ -153,6 +153,23 @@ if submitted:
     else:
         st.warning("⚠️ Masukkan minimal satu parameter untuk analisis.")
 
+# === Edukasi & Rekomendasi ===
+if status in ["🟠 Tercemar", "🔴 Sangat Tercemar"]:
+    st.markdown("""
+    <br>
+    <div style="background-color:#1C2833; padding:20px; border-radius:10px;">
+        <h3 style="color:#F7DC6F;">📚 Edukasi & Rekomendasi Perbaikan</h3>
+        <ul style="color:white;">
+            <li><b>Peningkatan DO & Penurunan BOD/COD:</b> Tambahkan aerasi pada badan air dan kurangi limbah organik.</li>
+            <li><b>Pengurangan Logam Berat:</b> Gunakan fitoremediasi (tumbuhan seperti eceng gondok atau vetiver) atau teknologi penjernihan berbasis karbon aktif.</li>
+            <li><b>Penanganan E-Coli:</b> Terapkan sistem sanitasi limbah domestik dan hindari buangan langsung ke sungai.</li>
+            <li><b>Sosialisasi ke Masyarakat:</b> Kampanye tentang pentingnya menjaga kualitas air dan tidak membuang limbah sembarangan.</li>
+            <li><b>Pemantauan Berkala:</b> Lakukan uji laboratorium rutin dan dokumentasikan hasilnya untuk evaluasi.</li>
+        </ul>
+        <p style="color:lightgrey; font-style:italic;">Sumber: KLHK, SNI 6989, Dinas Lingkungan Hidup, Jurnal Lingkungan Tropis</p>
+    </div>
+    """, unsafe_allow_html=True)
+
 # === Footer ===
 st.markdown("""
 <hr style="border:0.5px solid white">
