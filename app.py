@@ -44,7 +44,7 @@ set_background("turtle.jpg")
 st.markdown("<h1 style='text-align:center; color:white;'>💧 Indeks Pencemaran Air</h1>", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
 
-# === Mulai container utama transparan ===
+# === Container utama transparan ===
 st.markdown("<div class='main-container'>", unsafe_allow_html=True)
 
 # === Panel penjelasan ===
@@ -119,17 +119,19 @@ with st.form("form_input"):
 
 # === Perhitungan dan hasil ===
 if submitted:
+    # Tetap menghitung 0.0 sebagai nilai valid
     data = {
-        "pH": ph if ph != 0.0 else None,
-        "Suhu": suhu if suhu != 0.0 else None,
-        "DO": do if do != 0.0 else None,
-        "BOD": bod if bod != 0.0 else None,
-        "COD": cod if cod != 0.0 else None,
-        "TSS": tss if tss != 0.0 else None,
-        "Logam Berat": logam_berat if logam_berat != 0.0 else None,
-        "E-Coli": ecoli if ecoli != 0.0 else None,
+        "pH": ph,
+        "Suhu": suhu,
+        "DO": do,
+        "BOD": bod,
+        "COD": cod,
+        "TSS": tss,
+        "Logam Berat": logam_berat,
+        "E-Coli": ecoli
     }
 
+    # Hanya hitung nilai yang diisi (bukan None)
     nilai_terisi = [v for v in data.values() if v is not None]
 
     if nilai_terisi:
