@@ -162,6 +162,6 @@ st.markdown("</div>", unsafe_allow_html=True)
 st.markdown("""
 <hr style="border:0.5px solid white">
 <p style="text-align:center; color:lightgrey;">
-    © 2025 | Dibuat oleh Mahasiswa Peduli Lingkungan 💧
+    © 2025 | Dibuat oleh Mahasiswa Kelompok 11 Logika dan Pemrograman Komputer💧
 </p>
 """, unsafe_allow_html=True)
