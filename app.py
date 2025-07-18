@@ -36,7 +36,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-set_background("turtle.jpg")
+set_background("kurakura.jpg")
 
 st.markdown("<h1 style='text-align:center; color:white;'>💧 Indeks Pencemaran Air</h1>", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
