@@ -1,7 +1,7 @@
 import streamlit as st
 import base64
 
-# === Fungsi background dari gambar ===
+# === Background Gambar ===
 def set_background(image_path):
     with open(image_path, "rb") as image_file:
         encoded = base64.b64encode(image_file.read()).decode()
@@ -17,152 +17,127 @@ def set_background(image_path):
     """
     st.markdown(css, unsafe_allow_html=True)
 
-# === CSS transparan untuk konten utama ===
-st.markdown("""
-    <style>
-    .main-container {
-        background-color: rgba(0, 0, 0, 0.55);
-        padding: 25px;
-        border-radius: 15px;
-        color: white;
-        margin-top: 20px;
-    }
-    .main-container h2, .main-container h3, .main-container h4,
-    .main-container p, .main-container li {
-        color: white !important;
-    }
-    .stApp h1 {
-        background-color: transparent;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# === Pasang background ===
+# Pasang background
 set_background("kurakura.png")
 
-# === Judul utama ===
+# === Judul Aplikasi ===
 st.markdown("<h1 style='text-align:center; color:white;'>💧 Indeks Pencemaran Air</h1>", unsafe_allow_html=True)
-st.markdown("<br>", unsafe_allow_html=True)
 
-# === Container utama transparan ===
-st.markdown("<div class='main-container'>", unsafe_allow_html=True)
-
-# === Panel penjelasan ===
-with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP No. 22/2021, PP No. 20/1990, SNI)"):
+# === Penjelasan ===
+with st.expander("📘 Penjelasan Parameter Kualitas Air"):
     st.markdown("""
-    ### 🧠 Apa itu Indeks Pencemaran Air?
-    Indeks Pencemaran Air (IPA) adalah indikator untuk mengetahui tingkat pencemaran suatu badan air berdasarkan parameter fisik, kimia, dan biologi. IPA digunakan untuk menentukan status mutu air: **Baik**, **Sedang**, **Tercemar**, atau **Sangat Tercemar**.
+    <div style='color:white'>
+    <b>Indeks Pencemaran Air (IPA)</b> digunakan untuk mengetahui tingkat pencemaran air berdasarkan parameter kualitas air:
+    - <b>pH</b>: 6.5 - 8.5
+    - <b>Suhu</b>: Maksimal kenaikan 3°C
+    - <b>DO</b>: &gt; 5 mg/L
+    - <b>BOD</b>: &lt; 3 mg/L
+    - <b>COD</b>: &lt; 10 mg/L
+    - <b>TSS</b>: &lt; 50 mg/L
+    - <b>TDS</b>: ≤ 500 mg/L
+    - <b>E-Coli</b>: 0 JML/100 mL
+    - <b>Logam Berat</b>: (opsional, tergantung jenis)
+    </div>
+    """, unsafe_allow_html=True)
 
-    #### 📌 Referensi:
-    - **PP No. 22 Tahun 2021** tentang Perlindungan & Pengelolaan Lingkungan
-    - **PP No. 20 Tahun 1990** tentang Pengendalian Pencemaran Air
-    - **SNI 6989 series** untuk pengujian kualitas air
+# === Ambang batas logam berat ===
+ambang_logam = {
+    "Arsen (As)": 0.01, "Kadmium (Cd)": 0.003, "Kromium (Cr)": 0.05, "Raksa (Hg)": 0.001,
+    "Timbal (Pb)": 0.01, "Selenium (Se)": 0.02, "Antimon (Sb)": 0.02, "Barium (Ba)": 0.7,
+    "Boron (B)": 0.5, "Besi (Fe)": 0.3, "Mangan (Mn)": 0.1, "Nikel (Ni)": 0.07,
+    "Tembaga (Cu)": 2.0, "Seng (Zn)": 3.0, "Aluminium (Al)": 0.2
+}
 
-    ---
-
-    ### 📊 Parameter Kualitas Air & Baku Mutunya:
-
-    **1. pH (Keasaman)**  
-    - Mengukur keseimbangan asam-basa air  
-    - 💡 Baku mutu: **6.5 - 8.5**
-
-    **2. Suhu**  
-    - Mempengaruhi kelarutan oksigen  
-    - 💡 Baku mutu: Maks. kenaikan 3°C dari suhu alami
-
-    **3. DO (Oksigen Terlarut)**  
-    - Dibutuhkan makhluk hidup air  
-    - 💡 Baku mutu: **> 5 mg/L**
-
-    **4. BOD (Biochemical Oxygen Demand)**  
-    - Mengukur kebutuhan oksigen oleh mikroba  
-    - 💡 Baku mutu: **< 3 mg/L**
-
-    **5. COD (Chemical Oxygen Demand)**  
-    - Jumlah oksigen yang dibutuhkan untuk oksidasi bahan organik/anorganik  
-    - 💡 Baku mutu: **< 10 mg/L**
-
-    **6. TSS (Total Suspended Solid)**  
-    - Padatan tersuspensi seperti lumpur, pasir  
-    - 💡 Baku mutu: **< 50 mg/L**
-
-    **7. Logam Berat (Pb, Hg, Cr, Cd)**  
-    - Zat beracun berbahaya bahkan pada dosis kecil  
-    - 💡 Contoh ambang batas:
-        - Pb: < 0.03 mg/L  
-        - Hg: < 0.002 mg/L  
-        - Cr⁶⁺: < 0.05 mg/L
-
-    **8. E-Coli**  
-    - Parameter E. coli mengacu pada uji keberadaan dan jumlah bakteri *Escherichia coli* dalam suatu sampel air atau makanan.  
-    - E. coli adalah bakteri indikator yang menunjukkan adanya pencemaran oleh limbah tinja, dan bisa menjadi penyebab penyakit seperti diare jika terdapat dalam jumlah tinggi.  
-    - 💡 Baku mutu: **0 JML/100 mL**
-    """)
-
-# === Form input parameter ===
+# === Input Form ===
 with st.form("form_input"):
     col1, col2 = st.columns(2)
-
     with col1:
-        ph = st.number_input("pH", min_value=0.0, max_value=14.0, step=0.1, format="%.2f")
-        suhu = st.number_input("Suhu (°C)", step=0.1, format="%.2f")
-        do = st.number_input("Oksigen Terlarut / DO (mg/L)", step=0.1, format="%.2f")
-        bod = st.number_input("BOD (mg/L)", step=0.1, format="%.2f")
-
+        ph = st.number_input("pH", 0.0, 14.0, step=0.1)
+        suhu = st.number_input("Suhu (°C)", step=0.1)
+        do = st.number_input("Oksigen Terlarut / DO (mg/L)", step=0.1)
+        bod = st.number_input("BOD (mg/L)", step=0.1)
+        tds = st.number_input("TDS (mg/L)", step=1.0)
     with col2:
-        cod = st.number_input("COD (mg/L)", step=0.1, format="%.2f")
-        tss = st.number_input("TSS (mg/L)", step=0.1, format="%.2f")
-        logam_berat = st.number_input("Logam Berat (mg/L)", step=0.01, format="%.2f")
-        ecoli = st.number_input("E-Coli (Jumlah/100mL)", step=1.0, format="%.0f")
+        cod = st.number_input("COD (mg/L)", step=0.1)
+        tss = st.number_input("TSS (mg/L)", step=0.1)
+        ecoli = st.number_input("E-Coli (Jumlah/100mL)", step=1.0)
 
-    submitted = st.form_submit_button("🔍 Analisis Sekarang")
+    selected_logam = st.multiselect("Pilih Jenis Logam Berat yang Terdeteksi (Opsional)", list(ambang_logam.keys()))
 
-# === Perhitungan dan hasil ===
+    kadar_logam_input = {}
+    for logam in selected_logam:
+        kadar = st.number_input(f"Kadar {logam} (mg/L)", step=0.001, format="%.3f", key=logam)
+        kadar_logam_input[logam] = (kadar, ambang_logam[logam])
+
+    submitted = st.form_submit_button("Tampilkan Kadar Logam")
+
+# Simpan status analisis lanjut
 if submitted:
-    # Tetap menghitung 0.0 sebagai nilai valid
-    data = {
-        "pH": ph,
-        "Suhu": suhu,
-        "DO": do,
-        "BOD": bod,
-        "COD": cod,
-        "TSS": tss,
-        "Logam Berat": logam_berat,
-        "E-Coli": ecoli
-    }
+    if selected_logam:
+        st.markdown("### 💡 Nilai Kadar Logam Berat:")
+        for logam, (nilai, ambang) in kadar_logam_input.items():
+            st.markdown(f"- **{logam}**: {nilai} mg/L (Ambang batas: {ambang} mg/L)")
+    lanjut = st.button("🔬 Lanjutkan Analisis Kualitas Air")
+else:
+    lanjut = False
 
-    # Hanya hitung nilai yang diisi (bukan None)
-    nilai_terisi = [v for v in data.values() if v > 0]  # Menghitung nilai yang lebih besar dari 0
+# === Analisis Keseluruhan ===
+if lanjut:
+    pelanggaran = 0
+    catatan = []
 
-    if nilai_terisi:
-        indeks = sum(nilai_terisi) / len(nilai_terisi)
+    if ph < 6.5 or ph > 8.5:
+        pelanggaran += 1
+        catatan.append("pH di luar rentang aman (6.5 - 8.5)")
+    if suhu > 30:
+        pelanggaran += 1
+        catatan.append("Suhu naik > 3°C dari alami")
+    if do < 5:
+        pelanggaran += 1
+        catatan.append("DO < 5 mg/L")
+    if bod > 3:
+        pelanggaran += 1
+        catatan.append("BOD > 3 mg/L")
+    if cod > 10:
+        pelanggaran += 1
+        catatan.append("COD > 10 mg/L")
+    if tss > 50:
+        pelanggaran += 1
+        catatan.append("TSS > 50 mg/L")
+    if tds > 500:
+        pelanggaran += 1
+        catatan.append("TDS > 500 mg/L")
+    if ecoli > 0:
+        pelanggaran += 1
+        catatan.append("E-Coli terdeteksi")
 
-        if indeks < 20:
-            status, color = "💚 Baik", "rgba(46, 204, 113, 0.75)"
-        elif indeks < 50:
-            status, color = "🟡 Sedang", "rgba(244, 208, 63, 0.75)"
-        elif indeks < 80:
-            status, color = "🟠 Tercemar", "rgba(230, 126, 34, 0.75)"
-        else:
-            status, color = "🔴 Sangat Tercemar", "rgba(231, 76, 60, 0.75)"
+    for logam, (nilai, ambang) in kadar_logam_input.items():
+        if nilai > ambang:
+            pelanggaran += 1
+            catatan.append(f"{logam} melebihi ambang batas ({nilai} > {ambang})")
 
-        st.markdown(f"""
-            <div style="padding:20px; background-color:{color}; border-radius:12px;">
-                <h3 style="color:white;">Hasil Indeks Pencemaran: {indeks:.2f}</h3>
-                <h4 style="color:white;">Status: {status}</h4>
-                <p style="color:white;">Indeks ini dihitung berdasarkan rata-rata dari parameter yang diisi. Pastikan untuk memeriksa setiap parameter untuk mendapatkan hasil yang akurat.</p>
-            </div>
-        """, unsafe_allow_html=True)
+    if pelanggaran == 0:
+        status, color = "💚 Baik", "rgba(46, 204, 113, 0.75)"
+    elif pelanggaran <= 2:
+        status, color = "🟡 Sedang", "rgba(244, 208, 63, 0.75)"
+    elif pelanggaran <= 4:
+        status, color = "🟠 Tercemar", "rgba(230, 126, 34, 0.75)"
     else:
-        st.warning("⚠️ Masukkan minimal satu parameter untuk analisis.")
+        status, color = "🔴 Sangat Tercemar", "rgba(231, 76, 60, 0.75)"
 
-# === Tutup kontainer utama ===
-st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown(f"""
+    <div style="padding:20px; background-color:{color}; border-radius:12px;">
+        <h3 style="color:white;">Status Kualitas Air: {status}</h3>
+        <ul style="color:white;">
+            {''.join(f"<li>{c}</li>" for c in catatan)}
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
 
 # === Footer ===
 st.markdown("""
 <hr style="border:0.5px solid white">
 <p style="text-align:center; color:lightgrey;">
-    © 2025 | Dibuat oleh Mahasiswa Peduli Lingkungan 💧
+    Disusun oleh Kelompok 11 Logika dan Pemrograman Komputer
 </p>
 """, unsafe_allow_html=True)
