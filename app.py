@@ -95,8 +95,10 @@ if tampilkan:
         for logam, (nilai, ambang) in kadar_logam_input.items():
             st.markdown(f"- **{logam}**: {nilai} mg/L (Ambang batas: {ambang} mg/L)")
 
-    if st.button("🔬 Analisis Kualitas Air"):
+    if st.button("🔬 Lanjutkan Analisis Kualitas Air"):
         st.session_state["analisis"] = True
+        st.experimental_rerun()
+
 
 # === Analisis Lengkap ===
 if st.session_state.get("analisis"):
