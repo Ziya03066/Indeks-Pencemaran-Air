@@ -145,7 +145,7 @@ if st.session_state.analisis_dilanjut:
         catatan.append("TDS melebihi ambang batas (≤ 500 mg/L)")
 
     for logam, (nilai, ambang) in kadar_logam_input.items():
-        if nilai > ambang:
+        if nilai != 0.0 and nilai > ambang:
             pelanggaran += 1
             catatan.append(f"{logam} melebihi ambang batas ({nilai} > {ambang} mg/L)")
 
