@@ -90,13 +90,39 @@ with st.form("form_input"):
         suhu = st.number_input("Suhu (°C)", step=0.1, format="%.2f")
         do = st.number_input("Oksigen Terlarut / DO (mg/L)", step=0.1, format="%.2f")
         bod = st.number_input("BOD (mg/L)", step=0.1, format="%.2f")
-        tds = st.number_input("TDS (mg/L)", step=1.0, format="%.0f")  # ⬅️ TDS ditambahkan di sini
+        tds = st.number_input("TDS (mg/L)", step=1.0, format="%.0f")
 
     with col2:
         cod = st.number_input("COD (mg/L)", step=0.1, format="%.2f")
         tss = st.number_input("TSS (mg/L)", step=0.1, format="%.2f")
         logam_berat = st.number_input("Logam Berat (mg/L)", step=0.01, format="%.2f")
         ecoli = st.number_input("E-Coli (Jumlah/100mL)", step=1.0, format="%.0f")
+
+    # === Tambahan: Pilihan jenis logam berat dan nilai analisis ===
+    logam_opsi = {
+        "Arsen (As)": 0.01,
+        "Kadmium (Cd)": 0.003,
+        "Kromium (Cr)": 0.05,
+        "Raksa (Hg)": 0.001,
+        "Timbal (Pb)": 0.01,
+        "Selenium (Se)": 0.01,
+        "Antimon (Sb)": 0.02,
+        "Barium (Ba)": 0.7,
+        "Boron (B)": 0.5,
+        "Besi (Fe)": 0.3,
+        "Mangan (Mn)": 0.1,
+        "Nikel (Ni)": 0.07,
+        "Tembaga (Cu)": 2.0,
+        "Seng (Zn)": 3.0,
+        "Aluminium (Al)": 0.2,
+    }
+
+    st.markdown("**Masukkan hasil analisis untuk masing-masing logam berat (opsional):**", unsafe_allow_html=True)
+    jenis_logam_dipilih = st.multiselect("Pilih logam berat yang terdeteksi dalam sampel", list(logam_opsi.keys()))
+
+    input_logam_berat = {}
+    for logam in jenis_logam_dipilih:
+        input_logam_berat[logam] = st.number_input(f"Kadar {logam} (mg/L)", min_value=0.0, step=0.001, format="%.3f")
 
     submitted = st.form_submit_button("🔍 Analisis Sekarang")
 
@@ -135,11 +161,18 @@ if submitted:
 
     if logam_berat != 0.0 and logam_berat > 0.03:
         pelanggaran += 1
-        catatan.append("Logam berat melebihi ambang batas (misalnya Pb > 0.03 mg/L)")
+        catatan.append("Logam berat total melebihi ambang batas (misalnya Pb > 0.03 mg/L)")
 
     if ecoli != 0.0 and ecoli > 0:
         pelanggaran += 1
         catatan.append("E-Coli terdeteksi (> 0 JML/100mL)")
+
+    # === Tambahan: Perhitungan logam berat spesifik ===
+    for logam, nilai in input_logam_berat.items():
+        ambang = logam_opsi[logam]
+        if nilai > ambang:
+            pelanggaran += 1
+            catatan.append(f"{logam} melebihi ambang batas ({nilai} mg/L > {ambang} mg/L)")
 
     # === Status Berdasarkan Jumlah Parameter yang Melanggar ===
     if pelanggaran == 0:
