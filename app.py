@@ -28,7 +28,7 @@ st.markdown("<br>", unsafe_allow_html=True)
 with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP No. 22/2021, PP No. 20/1990, SNI)"):
     st.markdown("""
     <div style='color:white'>
-    ### 🧠 Apa itu Indeks Pencemaran Air?
+    🧠 Apa itu Indeks Pencemaran Air?
     Indeks Pencemaran Air (IPA) adalah indikator untuk mengetahui tingkat pencemaran suatu badan air berdasarkan parameter fisik, kimia, dan biologi. IPA digunakan untuk menentukan status mutu air: **Baik**, **Sedang**, **Tercemar**, atau **Sangat Tercemar**.
 
     ---
@@ -164,6 +164,6 @@ if submitted:
 st.markdown("""
 <hr style="border:0.5px solid white">
 <p style="text-align:center; color:lightgrey;">
-    Disusun oleh Kelompok 11 Logika dan Pemrograman Komputer 💧
+    Disusun oleh Kelompok 11 Logika dan Pemrograman Komputer 
 </p>
 """, unsafe_allow_html=True)
