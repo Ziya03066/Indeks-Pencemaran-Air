@@ -32,7 +32,7 @@ with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP
     Indeks Pencemaran Air (IPA) adalah indikator untuk mengetahui tingkat pencemaran suatu badan air berdasarkan parameter fisik, kimia, dan biologi. IPA digunakan untuk menentukan status mutu air: Baik, Sedang, Tercemar, atau Sangat Tercemar.
 
     ---
-    
+
     #### 📌 Referensi:
     - **PP No. 22 Tahun 2021** tentang Perlindungan & Pengelolaan Lingkungan
     - **PP No. 20 Tahun 1990** tentang Pengendalian Pencemaran Air
@@ -95,10 +95,9 @@ with st.form("form_input"):
     with col2:
         cod = st.number_input("COD (mg/L)", step=0.1, format="%.2f")
         tss = st.number_input("TSS (mg/L)", step=0.1, format="%.2f")
-        logam_berat = st.number_input("Logam Berat (mg/L)", step=0.01, format="%.2f")
         ecoli = st.number_input("E-Coli (Jumlah/100mL)", step=1.0, format="%.0f")
 
-    # === Tambahan: Pilihan jenis logam berat dan nilai analisis ===
+    # === Tambahan: Logam berat detail ===
     logam_opsi = {
         "Arsen (As)": 0.01,
         "Kadmium (Cd)": 0.003,
@@ -117,7 +116,7 @@ with st.form("form_input"):
         "Aluminium (Al)": 0.2,
     }
 
-    st.markdown("**Masukkan hasil analisis untuk masing-masing logam berat (opsional):**", unsafe_allow_html=True)
+    st.markdown("**Masukkan hasil analisis logam berat (jika ada):**", unsafe_allow_html=True)
     jenis_logam_dipilih = st.multiselect("Pilih logam berat yang terdeteksi dalam sampel", list(logam_opsi.keys()))
 
     input_logam_berat = {}
@@ -159,20 +158,16 @@ if submitted:
         pelanggaran += 1
         catatan.append("TDS melebihi ambang batas (≤ 500 mg/L)")
 
-    if logam_berat != 0.0 and logam_berat > 0.03:
-        pelanggaran += 1
-        catatan.append("Logam berat total melebihi ambang batas (misalnya Pb > 0.03 mg/L)")
-
-    if ecoli != 0.0 and ecoli > 0:
-        pelanggaran += 1
-        catatan.append("E-Coli terdeteksi (> 0 JML/100mL)")
-
-    # === Tambahan: Perhitungan logam berat spesifik ===
+    # Tambahan: pengecekan logam berat
     for logam, nilai in input_logam_berat.items():
         ambang = logam_opsi[logam]
         if nilai > ambang:
             pelanggaran += 1
             catatan.append(f"{logam} melebihi ambang batas ({nilai} mg/L > {ambang} mg/L)")
+
+    if ecoli != 0.0 and ecoli > 0:
+        pelanggaran += 1
+        catatan.append("E-Coli terdeteksi (> 0 JML/100mL)")
 
     # === Status Berdasarkan Jumlah Parameter yang Melanggar ===
     if pelanggaran == 0:
