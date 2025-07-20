@@ -69,7 +69,7 @@ with st.form("form_input"):
         kadar = st.number_input(f"Kadar {logam} (mg/L)", step=0.001, format="%.3f", key=logam)
         kadar_logam_input[logam] = (kadar, ambang_logam[logam])
 
-    submitted = st.form_submit_button("Tampilkan Kadar Logam")
+    submitted = st.form_submit_button("Tampilkan Hasil Analisis")
 
 # Simpan status analisis lanjut
 if submitted:
@@ -77,12 +77,8 @@ if submitted:
         st.markdown("### 💡 Nilai Kadar Logam Berat:")
         for logam, (nilai, ambang) in kadar_logam_input.items():
             st.markdown(f"- **{logam}**: {nilai} mg/L (Ambang batas: {ambang} mg/L)")
-    lanjut = st.button("🔬 Lanjutkan Analisis Kualitas Air")
-else:
-    lanjut = False
-
-# === Analisis Keseluruhan ===
-if lanjut:
+    
+    # === Analisis Keseluruhan ===
     pelanggaran = 0
     catatan = []
 
@@ -133,11 +129,3 @@ if lanjut:
         </ul>
     </div>
     """, unsafe_allow_html=True)
-
-# === Footer ===
-st.markdown("""
-<hr style="border:0.5px solid white">
-<p style="text-align:center; color:lightgrey;">
-    Disusun oleh Kelompok 11 Logika dan Pemrograman Komputer
-</p>
-""", unsafe_allow_html=True)
