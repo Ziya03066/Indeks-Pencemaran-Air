@@ -41,53 +41,40 @@ with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP
     ### 📊 Parameter Kualitas Air & Baku Mutunya:
 
     **1. pH (Keasaman)**  
-    - Ukuran tingkat keasaman atau kebasaan air.
-    - Skala pH berkisar dari 0 hingga 14, di mana pH 7 adalah netral, pH di bawah 7 adalah asam, dan pH di atas 7 adalah basa (alkali).
+    - Skala keasaman air, netral = 7  
     - 💡 Baku mutu: **6.5 - 8.5**
 
     **2. Suhu**  
-    - Ukuran tingkat panas atau dinginnya air.
-    - Mempengaruhi kelarutan oksigen.
+    - Pengaruh terhadap kelarutan oksigen  
     - 💡 Baku mutu: Maks. kenaikan 3°C dari suhu alami
 
     **3. DO (Oksigen Terlarut)**  
-    -  Jumlah gas oksigen (O2) yang terlarut di dalam air dan tersedia untuk digunakan oleh organisme akuatik.   
+    - Dibutuhkan oleh makhluk hidup air  
     - 💡 Baku mutu: **> 5 mg/L**
 
     **4. BOD (Biochemical Oxygen Demand)**  
-    - Mengukur kebutuhan oksigen oleh mikroba  
+    - Kebutuhan oksigen mikroba  
     - 💡 Baku mutu: **< 3 mg/L**
 
     **5. COD (Chemical Oxygen Demand)**  
-    - Jumlah oksigen yang dibutuhkan untuk oksidasi bahan organik/anorganik  
+    - Oksidasi bahan organik/anorganik  
     - 💡 Baku mutu: **< 10 mg/L**
 
     **6. TSS (Total Suspended Solid)**  
-    - Padatan tersuspensi seperti lumpur, pasir  
+    - Padatan tersuspensi  
     - 💡 Baku mutu: **< 50 mg/L**
 
-    **7. Logam Berat (Pb, Hg, Cr, Cd)**  
-    - kelompok unsur kimia dengan densitas yang relatif tinggi dan bersifat toksik atau beracun pada konsentrasi rendah. 
-    = Ambang batas logam berat ini sangat bervariasi dan diatur berdasarkan peruntukan airnya. Artinya, standar untuk air yang akan diminum tentu akan jauh lebih ketat dibandingkan dengan air yang digunakan untuk irigasi pertanian atau air yang boleh dibuang sebagai limbah.
-    - 💡 Contoh ambang batas pada Air Minum:
-        - Arsen (As) ≤ 0,01
-        - Kadmium (Cd) ≤ 0,003
-        - Kromium (Cr) ≤ 0,05
-        - Raksa (Hg) ≤ 0,001
-        - Timbal (Pb) ≤ 0,01
-        - Selenium (Se) ≤ 0,01
-        - Antimon (Sb) ≤ 0,02
-        - Barium (Ba) ≤ 0,7
-        - Boron (B) ≤ 0,5
-        - Besi (Fe) ≤ 0,3
-        - Mangan (Mn) ≤ 0,1
-        - Nikel (Ni) ≤ 0,07
-        - Tembaga (Cu) ≤ 2
-        - Seng (Zn) ≤ 3
-        - Aluminium (Al) ≤ 0,2
+    **7. TDS (Total Dissolved Solids)**  
+    - Padatan terlarut (garam, logam, mineral)  
+    - 💡 Baku mutu: **≤ 500 mg/L**
 
-    **8. E-Coli**  
-    - Bakteri indikator adanya cemaran tinja yang berpotensi membawa agen penyakit berbahaya bagi kesehatan manusia.
+    **8. Logam Berat (Pb, Hg, Cr, Cd)**  
+    - Toksik dalam konsentrasi kecil  
+    - 💡 Ambang batas (contoh air minum):
+        - Pb ≤ 0.01 mg/L, Hg ≤ 0.001 mg/L, Cr ≤ 0.05 mg/L, dll.
+
+    **9. E-Coli**  
+    - Indikator pencemaran feses  
     - 💡 Baku mutu: **0 JML/100 mL**
     </div>
     """, unsafe_allow_html=True)
@@ -101,6 +88,7 @@ with st.form("form_input"):
         suhu = st.number_input("Suhu (°C)", step=0.1, format="%.2f")
         do = st.number_input("Oksigen Terlarut / DO (mg/L)", step=0.1, format="%.2f")
         bod = st.number_input("BOD (mg/L)", step=0.1, format="%.2f")
+        tds = st.number_input("TDS (mg/L)", step=1.0, format="%.0f")  # ⬅️ TDS ditambahkan di sini
 
     with col2:
         cod = st.number_input("COD (mg/L)", step=0.1, format="%.2f")
@@ -119,9 +107,9 @@ if submitted:
         pelanggaran += 1
         catatan.append("pH di luar rentang aman (6.5 - 8.5)")
 
-    if suhu != 0.0 and suhu > 30:  # misalnya suhu alami dianggap 27°C
+    if suhu != 0.0 and suhu > 30:
         pelanggaran += 1
-        catatan.append("Suhu naik lebih dari 3°C dari alami")
+        catatan.append("Suhu naik lebih dari 3°C dari suhu alami")
 
     if do != 0.0 and do < 5:
         pelanggaran += 1
@@ -138,6 +126,10 @@ if submitted:
     if tss != 0.0 and tss > 50:
         pelanggaran += 1
         catatan.append("TSS lebih dari 50 mg/L")
+
+    if tds != 0.0 and tds > 500:
+        pelanggaran += 1
+        catatan.append("TDS melebihi ambang batas (≤ 500 mg/L)")
 
     if logam_berat != 0.0 and logam_berat > 0.03:
         pelanggaran += 1
@@ -170,6 +162,6 @@ if submitted:
 st.markdown("""
 <hr style="border:0.5px solid white">
 <p style="text-align:center; color:lightgrey;">
-    Disusub oleh Kelompok 11 Logika dan Pemrograman Komputer 
+    Disusun oleh Kelompok 11 Logika dan Pemrograman Komputer 💧
 </p>
 """, unsafe_allow_html=True)
