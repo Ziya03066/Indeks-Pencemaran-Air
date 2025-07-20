@@ -19,30 +19,30 @@ def set_background(image_path):
 
 set_background("kurakura.png")
 
-# === Judul ===
+# === Judul Aplikasi ===
 st.markdown("<h1 style='text-align:center; color:white;'>💧 Indeks Pencemaran Air</h1>", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
 
-# === Penjelasan Indeks ===
+# === Penjelasan IPA ===
 with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter"):
     st.markdown("""
     <div style='color:white'>
-    **Indeks Pencemaran Air (IPA)** adalah metode untuk mengetahui tingkat pencemaran air berdasarkan sejumlah parameter fisik, kimia, dan biologis.
+    **Indeks Pencemaran Air (IPA)** digunakan untuk menilai kualitas air berdasarkan parameter fisik, kimia, dan biologi.  
 
-    **Parameter dan Baku Mutu:**
-    - **pH**: 6.5 – 8.5 (Netral)
-    - **Suhu**: Maks. kenaikan 3°C dari suhu alami
-    - **DO (Oksigen Terlarut)**: > 5 mg/L
-    - **BOD**: < 3 mg/L
-    - **COD**: < 10 mg/L
-    - **TSS**: < 50 mg/L
-    - **TDS**: ≤ 500 mg/L
-    - **E-Coli**: 0 JML/100 mL
-    - **Logam Berat**: (batas berbeda tiap jenis, contoh: Pb ≤ 0.01 mg/L)
+    **Baku Mutu Parameter:**
+    - pH: 6.5 – 8.5
+    - Suhu: Max 3°C lebih tinggi dari alami
+    - DO: > 5 mg/L
+    - BOD: < 3 mg/L
+    - COD: < 10 mg/L
+    - TSS: < 50 mg/L
+    - TDS: ≤ 500 mg/L
+    - E-Coli: 0 JML/100 mL
+    - Logam Berat: batas tergantung jenis
     </div>
     """, unsafe_allow_html=True)
 
-# === Ambang batas logam berat
+# === Ambang Batas Logam Berat ===
 ambang_logam = {
     "Arsen (As)": 0.01,
     "Kadmium (Cd)": 0.003,
@@ -61,79 +61,57 @@ ambang_logam = {
     "Aluminium (Al)": 0.2
 }
 
-# === Form Input
+# === Input Parameter Air ===
 with st.form("form_input"):
     col1, col2 = st.columns(2)
-
     with col1:
-        ph = st.number_input("pH", 0.0, 14.0, step=0.1, format="%.2f")
-        suhu = st.number_input("Suhu (°C)", step=0.1, format="%.2f")
-        do = st.number_input("DO (mg/L)", step=0.1, format="%.2f")
-        bod = st.number_input("BOD (mg/L)", step=0.1, format="%.2f")
-        tds = st.number_input("TDS (mg/L)", step=1.0, format="%.0f")
-
+        ph = st.number_input("pH", 0.0, 14.0, step=0.1)
+        suhu = st.number_input("Suhu (°C)", step=0.1)
+        do = st.number_input("DO (mg/L)", step=0.1)
+        bod = st.number_input("BOD (mg/L)", step=0.1)
+        tds = st.number_input("TDS (mg/L)", step=1.0)
     with col2:
-        cod = st.number_input("COD (mg/L)", step=0.1, format="%.2f")
-        tss = st.number_input("TSS (mg/L)", step=0.1, format="%.2f")
-        ecoli = st.number_input("E-Coli (JML/100 mL)", step=1.0, format="%.0f")
+        cod = st.number_input("COD (mg/L)", step=0.1)
+        tss = st.number_input("TSS (mg/L)", step=0.1)
+        ecoli = st.number_input("E-Coli (Jumlah/100mL)", step=1.0)
 
-    # === Pilihan logam berat
-    selected_logam = st.multiselect("Pilih logam berat yang terdeteksi (opsional)", list(ambang_logam.keys()))
+    selected_logam = st.multiselect("Pilih Logam Berat (opsional)", list(ambang_logam.keys()))
     kadar_logam_input = {}
-
     for logam in selected_logam:
         kadar = st.number_input(f"Kadar {logam} (mg/L)", step=0.001, format="%.3f", key=logam)
         kadar_logam_input[logam] = (kadar, ambang_logam[logam])
 
-    tampilkan = st.form_submit_button("Tampilkan Nilai Kadar")
+    lanjutkan = st.form_submit_button("🔬 Lanjutkan Analisis")
 
-# === Menampilkan Nilai Kadar
-if tampilkan:
-    if selected_logam:
-        st.markdown("### 💡 Nilai Kadar Logam Berat yang Diinput:")
-        for logam, (nilai, ambang) in kadar_logam_input.items():
-            st.markdown(f"- **{logam}**: {nilai} mg/L (Ambang: {ambang} mg/L)")
-
-    if st.button("🔬 Lanjutkan Analisis"):
-        st.session_state["lanjut"] = True
-        st.experimental_rerun()
-
-# === Analisis kualitas air
-if st.session_state.get("lanjut", False):
+# === ANALISIS DIMULAI ===
+if lanjutkan:
     pelanggaran = 0
     catatan = []
 
     if ph < 6.5 or ph > 8.5:
         pelanggaran += 1
         catatan.append("pH di luar rentang aman (6.5–8.5)")
-
     if suhu > 30:
         pelanggaran += 1
-        catatan.append("Suhu naik lebih dari 3°C dari suhu alami")
-
+        catatan.append("Suhu naik > 3°C dari alami")
     if do < 5:
         pelanggaran += 1
-        catatan.append("DO kurang dari 5 mg/L")
-
+        catatan.append("DO < 5 mg/L")
     if bod > 3:
         pelanggaran += 1
-        catatan.append("BOD lebih dari 3 mg/L")
-
+        catatan.append("BOD > 3 mg/L")
     if cod > 10:
         pelanggaran += 1
-        catatan.append("COD lebih dari 10 mg/L")
-
+        catatan.append("COD > 10 mg/L")
     if tss > 50:
         pelanggaran += 1
-        catatan.append("TSS lebih dari 50 mg/L")
-
+        catatan.append("TSS > 50 mg/L")
     if tds > 500:
         pelanggaran += 1
-        catatan.append("TDS lebih dari 500 mg/L")
-
+        catatan.append("TDS > 500 mg/L")
     if ecoli > 0:
         pelanggaran += 1
-        catatan.append("E-Coli terdeteksi (> 0 JML/100mL)")
+        catatan.append("E-Coli terdeteksi")
 
     for logam, (nilai, ambang) in kadar_logam_input.items():
         if nilai > ambang:
@@ -151,18 +129,18 @@ if st.session_state.get("lanjut", False):
         status, color = "🔴 Sangat Tercemar", "rgba(231, 76, 60, 0.75)"
 
     st.markdown(f"""
-        <div style="padding:20px; background-color:{color}; border-radius:12px;">
-            <h3 style="color:white;">Status Kualitas Air: {status}</h3>
-            <ul style="color:white;">
-                {''.join(f"<li>{c}</li>" for c in catatan)}
-            </ul>
-        </div>
+    <div style="padding:20px; background-color:{color}; border-radius:12px;">
+        <h3 style="color:white;">Status Kualitas Air: {status}</h3>
+        <ul style="color:white;">
+            {''.join(f"<li>{c}</li>" for c in catatan)}
+        </ul>
+    </div>
     """, unsafe_allow_html=True)
 
 # === Footer ===
 st.markdown("""
 <hr style="border:0.5px solid white">
 <p style="text-align:center; color:lightgrey;">
-    Disusun oleh Kelompok 11 - Logika dan Pemrograman Komputer
+    Disusun oleh Kelompok 11 Logika dan Pemrograman Komputer 
 </p>
 """, unsafe_allow_html=True)
