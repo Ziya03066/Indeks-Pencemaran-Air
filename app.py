@@ -43,45 +43,36 @@ with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP
     ### 📊 Parameter Kualitas Air & Baku Mutunya:
 
     **1. pH (Keasaman)**  
-    - Skala keasaman air, netral = 7  
     - 💡 Baku mutu: **6.5 - 8.5**
 
     **2. Suhu**  
-    - Pengaruh terhadap kelarutan oksigen  
-    - 💡 Baku mutu: Maks. kenaikan 3°C dari suhu alami
+    - 💡 Maks. kenaikan 3°C dari suhu alami
 
     **3. DO (Oksigen Terlarut)**  
-    - Dibutuhkan oleh makhluk hidup air  
     - 💡 Baku mutu: **> 5 mg/L**
 
-    **4. BOD (Biochemical Oxygen Demand)**  
-    - Kebutuhan oksigen mikroba  
+    **4. BOD**  
     - 💡 Baku mutu: **< 3 mg/L**
 
-    **5. COD (Chemical Oxygen Demand)**  
-    - Oksidasi bahan organik/anorganik  
+    **5. COD**  
     - 💡 Baku mutu: **< 10 mg/L**
 
-    **6. TSS (Total Suspended Solid)**  
-    - Padatan tersuspensi  
+    **6. TSS**  
     - 💡 Baku mutu: **< 50 mg/L**
 
-    **7. TDS (Total Dissolved Solids)**  
-    - Padatan terlarut (garam, logam, mineral)  
+    **7. TDS**  
     - 💡 Baku mutu: **≤ 500 mg/L**
 
-    **8. Logam Berat (Pb, Hg, Cr, Cd, dll)**  
-    - Toksik dalam konsentrasi kecil  
-    - 💡 Ambang batas (contoh air minum):
-        - Pb ≤ 0.01 mg/L, Hg ≤ 0.001 mg/L, Cr ≤ 0.05 mg/L, dll.
+    **8. Logam Berat**  
+    - 💡 Ambang batas contoh air minum:
+        - Pb ≤ 0.01, Hg ≤ 0.001, Cr ≤ 0.05, dll.
 
     **9. E-Coli**  
-    - Indikator pencemaran feses  
     - 💡 Baku mutu: **0 JML/100 mL**
     </div>
     """, unsafe_allow_html=True)
 
-# === Batas logam berat air minum (PP/SNI)
+# === Batas logam berat air minum
 ambang_logam = {
     "Arsen (As)": 0.01,
     "Kadmium (Cd)": 0.003,
@@ -116,14 +107,14 @@ with st.form("form_input"):
         tss = st.number_input("TSS (mg/L)", step=0.1, format="%.2f")
         ecoli = st.number_input("E-Coli (Jumlah/100mL)", step=1.0, format="%.0f")
 
-    # === Pilihan dan input logam berat ===
-    st.markdown("### ⚙️ Parameter Logam Berat")
-    jenis_logam = st.multiselect("Pilih jenis logam berat:", list(ambang_logam.keys()))
+    # === Logam Berat Dinamis ===
+    st.markdown("### ⚙️ Logam Berat")
+    selected_logam = st.multiselect("Pilih jenis logam berat:", list(ambang_logam.keys()))
     kadar_logam_input = {}
-    for logam in jenis_logam:
+    for logam in selected_logam:
         ambang = ambang_logam[logam]
-        nilai = st.number_input(f"{logam} (Ambang ≤ {ambang} mg/L)", min_value=0.0, step=0.001, format="%.3f", key=logam)
-        kadar_logam_input[logam] = (nilai, ambang)
+        kadar = st.number_input(f"{logam} (Ambang ≤ {ambang} mg/L)", min_value=0.0, step=0.001, format="%.3f", key=logam)
+        kadar_logam_input[logam] = (kadar, ambang)
 
     submitted = st.form_submit_button("🔍 Analisis Sekarang")
 
