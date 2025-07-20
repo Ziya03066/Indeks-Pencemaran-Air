@@ -28,14 +28,14 @@ with st.expander("📘 Penjelasan Parameter Kualitas Air"):
     st.markdown("""
     <div style='color:white'>
     <b>Indeks Pencemaran Air (IPA)</b> digunakan untuk mengetahui tingkat pencemaran air berdasarkan parameter kualitas air:
-    - <b>pH</b>: 6.5 - 8.5
-    - <b>Suhu</b>: Maksimal kenaikan 3°C
-    - <b>DO</b>: &gt; 5 mg/L
-    - <b>BOD</b>: &lt; 3 mg/L
-    - <b>COD</b>: &lt; 10 mg/L
-    - <b>TSS</b>: &lt; 50 mg/L
-    - <b>TDS</b>: ≤ 500 mg/L
-    - <b>E-Coli</b>: 0 JML/100 mL
+    - <b>pH</b>: 6.5 - 8.5  
+    - <b>Suhu</b>: Maksimal kenaikan 3°C  
+    - <b>DO</b>: &gt; 5 mg/L  
+    - <b>BOD</b>: &lt; 3 mg/L  
+    - <b>COD</b>: &lt; 10 mg/L  
+    - <b>TSS</b>: &lt; 50 mg/L  
+    - <b>TDS</b>: ≤ 500 mg/L  
+    - <b>E-Coli</b>: 0 JML/100 mL  
     - <b>Logam Berat</b>: (opsional, tergantung jenis)
     </div>
     """, unsafe_allow_html=True)
@@ -48,8 +48,9 @@ ambang_logam = {
     "Tembaga (Cu)": 2.0, "Seng (Zn)": 3.0, "Aluminium (Al)": 0.2
 }
 
-# === Input Form ===
+# === Form Input Semua (termasuk tombol analisis) ===
 with st.form("form_input"):
+    st.markdown("### 🔍 Masukkan Parameter Kualitas Air")
     col1, col2 = st.columns(2)
     with col1:
         ph = st.number_input("pH", 0.0, 14.0, step=0.1)
@@ -65,21 +66,15 @@ with st.form("form_input"):
     selected_logam = st.multiselect("Pilih Jenis Logam Berat yang Terdeteksi (Opsional)", list(ambang_logam.keys()))
 
     kadar_logam_input = {}
-    for logam in selected_logam:
-        kadar = st.number_input(f"Kadar {logam} (mg/L)", step=0.001, format="%.3f", key=logam)
-        kadar_logam_input[logam] = (kadar, ambang_logam[logam])
-
-    submitted = st.form_submit_button("Tampilkan Kadar Logam")
-
-# Simpan status analisis lanjut
-if submitted:
     if selected_logam:
         st.markdown("### 💡 Nilai Kadar Logam Berat:")
-        for logam, (nilai, ambang) in kadar_logam_input.items():
-            st.markdown(f"- **{logam}**: {nilai} mg/L (Ambang batas: {ambang} mg/L)")
-    lanjut = st.button("🔬 Lanjutkan Analisis Kualitas Air")
-else:
-    lanjut = False
+        for i, logam in enumerate(selected_logam):
+            key_input = f"{logam}_{i}"
+            kadar = st.number_input(f"Kadar {logam} (mg/L)", step=0.001, format="%.3f", key=key_input)
+            ambang = ambang_logam[logam]
+            kadar_logam_input[logam] = (kadar, ambang)
+
+    lanjut = st.form_submit_button("🔬 Lanjutkan Analisis Kualitas Air")
 
 # === Analisis Keseluruhan ===
 if lanjut:
