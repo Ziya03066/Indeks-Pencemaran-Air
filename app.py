@@ -95,40 +95,38 @@ with st.form("form_input"):
     with col2:
         cod = st.number_input("COD (mg/L)", step=0.1, format="%.2f")
         tss = st.number_input("TSS (mg/L)", step=0.1, format="%.2f")
-
-        st.markdown("<br><b style='color:white'>Pilih Jenis Logam Berat:</b>", unsafe_allow_html=True)
-
-        logam_opsi = {
-            "Arsen (As)": 0.01,
-            "Kadmium (Cd)": 0.003,
-            "Kromium (Cr)": 0.05,
-            "Raksa (Hg)": 0.001,
-            "Timbal (Pb)": 0.01,
-            "Selenium (Se)": 0.01,
-            "Antimon (Sb)": 0.02,
-            "Barium (Ba)": 0.7,
-            "Boron (B)": 0.5,
-            "Besi (Fe)": 0.3,
-            "Mangan (Mn)": 0.1,
-            "Nikel (Ni)": 0.07,
-            "Tembaga (Cu)": 2.0,
-            "Seng (Zn)": 3.0,
-            "Aluminium (Al)": 0.2
-        }
-
-        jenis_logam = st.multiselect("Pilih logam berat yang dianalisis:", list(logam_opsi.keys()))
-        kadar_logam_input = {}
-
-        for logam in jenis_logam:
-            ambang = logam_opsi[logam]
-            kadar = st.number_input(f"Kadar {logam} (mg/L) – Ambang batas: {ambang}", min_value=0.0, step=0.001, format="%.3f")
-            kadar_logam_input[logam] = (kadar, ambang)
-
         ecoli = st.number_input("E-Coli (Jumlah/100mL)", step=1.0, format="%.0f")
+
+    st.markdown("### 🧪 Logam Berat")
+    logam_opsi = {
+        "Arsen (As)": 0.01,
+        "Kadmium (Cd)": 0.003,
+        "Kromium (Cr)": 0.05,
+        "Raksa (Hg)": 0.001,
+        "Timbal (Pb)": 0.01,
+        "Selenium (Se)": 0.01,
+        "Antimon (Sb)": 0.02,
+        "Barium (Ba)": 0.7,
+        "Boron (B)": 0.5,
+        "Besi (Fe)": 0.3,
+        "Mangan (Mn)": 0.1,
+        "Nikel (Ni)": 0.07,
+        "Tembaga (Cu)": 2.0,
+        "Seng (Zn)": 3.0,
+        "Aluminium (Al)": 0.2
+    }
+
+    selected_logams = st.multiselect("Pilih jenis logam berat yang terdeteksi:", list(logam_opsi.keys()))
+    kadar_logam_input = {}
+
+    for logam in selected_logams:
+        ambang = logam_opsi[logam]
+        kadar = st.number_input(f"Kadar {logam} (mg/L) - Ambang: {ambang}", min_value=0.0, step=0.001, format="%.3f")
+        kadar_logam_input[logam] = (kadar, ambang)
 
     submitted = st.form_submit_button("🔍 Analisis Sekarang")
 
-# === Perhitungan Berdasarkan Baku Mutu ===
+# === Analisis ===
 if submitted:
     pelanggaran = 0
     catatan = []
@@ -136,40 +134,34 @@ if submitted:
     if ph != 0.0 and (ph < 6.5 or ph > 8.5):
         pelanggaran += 1
         catatan.append("pH di luar rentang aman (6.5 - 8.5)")
-
     if suhu != 0.0 and suhu > 30:
         pelanggaran += 1
         catatan.append("Suhu naik lebih dari 3°C dari suhu alami")
-
     if do != 0.0 and do < 5:
         pelanggaran += 1
         catatan.append("DO kurang dari 5 mg/L")
-
     if bod != 0.0 and bod > 3:
         pelanggaran += 1
         catatan.append("BOD lebih dari 3 mg/L")
-
     if cod != 0.0 and cod > 10:
         pelanggaran += 1
         catatan.append("COD lebih dari 10 mg/L")
-
     if tss != 0.0 and tss > 50:
         pelanggaran += 1
         catatan.append("TSS lebih dari 50 mg/L")
-
     if tds != 0.0 and tds > 500:
         pelanggaran += 1
         catatan.append("TDS melebihi ambang batas (≤ 500 mg/L)")
+    if ecoli != 0.0 and ecoli > 0:
+        pelanggaran += 1
+        catatan.append("E-Coli terdeteksi (> 0 JML/100mL)")
 
     for logam, (nilai, ambang) in kadar_logam_input.items():
         if nilai > ambang:
             pelanggaran += 1
             catatan.append(f"{logam} melebihi ambang batas ({nilai} > {ambang} mg/L)")
 
-    if ecoli != 0.0 and ecoli > 0:
-        pelanggaran += 1
-        catatan.append("E-Coli terdeteksi (> 0 JML/100mL)")
-
+    # Status Akhir
     if pelanggaran == 0:
         status, color = "💚 Baik", "rgba(46, 204, 113, 0.75)"
     elif pelanggaran <= 2:
