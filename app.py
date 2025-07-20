@@ -17,39 +17,17 @@ def set_background(image_path):
     """
     st.markdown(css, unsafe_allow_html=True)
 
-# Pasang gambar background
 set_background("kurakura.png")
 
 # === Judul Aplikasi ===
 st.markdown("<h1 style='text-align:center; color:white;'>💧 Indeks Pencemaran Air</h1>", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
 
-# === Panel Penjelasan ===
-with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP No. 22/2021, PP No. 20/1990, SNI)"):
+# === Penjelasan ===
+with st.expander("📘 Penjelasan Indeks Pencemaran Air"):
     st.markdown("""
     <div style='color:white'>
-    🧠 Apa itu Indeks Pencemaran Air?
-    Indeks Pencemaran Air (IPA) adalah indikator untuk mengetahui tingkat pencemaran suatu badan air berdasarkan parameter fisik, kimia, dan biologi. IPA digunakan untuk menentukan status mutu air: Baik, Sedang, Tercemar, atau Sangat Tercemar.
-
-    ---
-    
-    #### 📌 Referensi:
-    - **PP No. 22 Tahun 2021**
-    - **PP No. 20 Tahun 1990**
-    - **SNI 6989 series**
-
-    ---
-    ### 📊 Parameter Kualitas Air & Baku Mutunya:
-
-    **pH:** 6.5 - 8.5  
-    **Suhu:** Maks. kenaikan 3°C dari alami  
-    **DO:** > 5 mg/L  
-    **BOD:** < 3 mg/L  
-    **COD:** < 10 mg/L  
-    **TSS:** < 50 mg/L  
-    **TDS:** ≤ 500 mg/L  
-    **E-Coli:** 0 JML/100 mL  
-    **Logam Berat:** (sesuai jenisnya)
+    Indeks Pencemaran Air (IPA) adalah indikator kualitas air berdasarkan parameter fisik, kimia, dan biologi. Status mutu air ditentukan berdasarkan ambang batas PP No. 22/2021, PP No. 20/1990, dan SNI.
     </div>
     """, unsafe_allow_html=True)
 
@@ -72,47 +50,30 @@ ambang_logam = {
     "Aluminium (Al)": 0.2
 }
 
-# === Input Form ===
+# === Form Input ===
 with st.form("form_input"):
     col1, col2 = st.columns(2)
-
     with col1:
         ph = st.number_input("pH", min_value=0.0, max_value=14.0, step=0.1, format="%.2f")
         suhu = st.number_input("Suhu (°C)", step=0.1, format="%.2f")
-        do = st.number_input("Oksigen Terlarut / DO (mg/L)", step=0.1, format="%.2f")
+        do = st.number_input("DO (mg/L)", step=0.1, format="%.2f")
         bod = st.number_input("BOD (mg/L)", step=0.1, format="%.2f")
         tds = st.number_input("TDS (mg/L)", step=1.0, format="%.0f")
-
     with col2:
         cod = st.number_input("COD (mg/L)", step=0.1, format="%.2f")
         tss = st.number_input("TSS (mg/L)", step=0.1, format="%.2f")
-        ecoli = st.number_input("E-Coli (Jumlah/100mL)", step=1.0, format="%.0f")
+        ecoli = st.number_input("E-Coli (/100mL)", step=1.0, format="%.0f")
 
-    selected_logam = st.multiselect("Pilih Jenis Logam Berat yang Terdeteksi", list(ambang_logam.keys()))
-
+    selected_logam = st.multiselect("Pilih Logam Berat Terdeteksi", list(ambang_logam.keys()))
     kadar_logam_input = {}
     for logam in selected_logam:
         kadar = st.number_input(f"Kadar {logam} (mg/L)", step=0.001, format="%.3f", key=logam)
         kadar_logam_input[logam] = (kadar, ambang_logam[logam])
 
-    submitted = st.form_submit_button("Tampilkan Nilai Kadar")
+    submitted = st.form_submit_button("🔬 Analisis Kualitas Air")
 
-# Simpan status tombol "lanjut" di session state
-if "analisis_dilanjut" not in st.session_state:
-    st.session_state.analisis_dilanjut = False
-
-# Setelah form diisi
+# === Analisis ===
 if submitted:
-    if kadar_logam_input:
-        st.markdown("### 💡 Nilai Kadar Logam Berat yang Diinput:")
-        for logam, (nilai, ambang) in kadar_logam_input.items():
-            st.markdown(f"- **{logam}**: {nilai} mg/L (Ambang batas: {ambang} mg/L)")
-
-    if st.button("🔬 Lanjutkan Analisis Kualitas Air"):
-        st.session_state.analisis_dilanjut = True
-
-# === Analisis Lengkap ===
-if st.session_state.analisis_dilanjut:
     pelanggaran = 0
     catatan = []
 
@@ -153,6 +114,7 @@ if st.session_state.analisis_dilanjut:
         pelanggaran += 1
         catatan.append("E-Coli terdeteksi (> 0 JML/100mL)")
 
+    # === Hasil Status
     if pelanggaran == 0:
         status, color = "💚 Baik", "rgba(46, 204, 113, 0.75)"
     elif pelanggaran <= 2:
