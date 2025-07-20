@@ -32,7 +32,7 @@ with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP
     Indeks Pencemaran Air (IPA) adalah indikator untuk mengetahui tingkat pencemaran suatu badan air berdasarkan parameter fisik, kimia, dan biologi. IPA digunakan untuk menentukan status mutu air: Baik, Sedang, Tercemar, atau Sangat Tercemar.
 
     ---
-
+    
     #### 📌 Referensi:
     - **PP No. 22 Tahun 2021** tentang Perlindungan & Pengelolaan Lingkungan
     - **PP No. 20 Tahun 1990** tentang Pengendalian Pencemaran Air
@@ -70,9 +70,9 @@ with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP
     - Padatan terlarut (garam, logam, mineral)  
     - 💡 Baku mutu: **≤ 500 mg/L**
 
-    **8. Logam Berat (Pb, Hg, Cr, Cd)**  
+    **8. Logam Berat (Pb, Hg, Cr, Cd, dll)**  
     - Toksik dalam konsentrasi kecil  
-    - 💡 Ambang batas (contoh air minum):
+    - 💡 Contoh ambang batas air minum:
         - Pb ≤ 0.01 mg/L, Hg ≤ 0.001 mg/L, Cr ≤ 0.05 mg/L, dll.
 
     **9. E-Coli**  
@@ -95,33 +95,36 @@ with st.form("form_input"):
     with col2:
         cod = st.number_input("COD (mg/L)", step=0.1, format="%.2f")
         tss = st.number_input("TSS (mg/L)", step=0.1, format="%.2f")
+
+        st.markdown("<br><b style='color:white'>Pilih Jenis Logam Berat:</b>", unsafe_allow_html=True)
+
+        logam_opsi = {
+            "Arsen (As)": 0.01,
+            "Kadmium (Cd)": 0.003,
+            "Kromium (Cr)": 0.05,
+            "Raksa (Hg)": 0.001,
+            "Timbal (Pb)": 0.01,
+            "Selenium (Se)": 0.01,
+            "Antimon (Sb)": 0.02,
+            "Barium (Ba)": 0.7,
+            "Boron (B)": 0.5,
+            "Besi (Fe)": 0.3,
+            "Mangan (Mn)": 0.1,
+            "Nikel (Ni)": 0.07,
+            "Tembaga (Cu)": 2.0,
+            "Seng (Zn)": 3.0,
+            "Aluminium (Al)": 0.2
+        }
+
+        jenis_logam = st.multiselect("Pilih logam berat yang dianalisis:", list(logam_opsi.keys()))
+        kadar_logam_input = {}
+
+        for logam in jenis_logam:
+            ambang = logam_opsi[logam]
+            kadar = st.number_input(f"Kadar {logam} (mg/L) – Ambang batas: {ambang}", min_value=0.0, step=0.001, format="%.3f")
+            kadar_logam_input[logam] = (kadar, ambang)
+
         ecoli = st.number_input("E-Coli (Jumlah/100mL)", step=1.0, format="%.0f")
-
-    # === Tambahan: Logam berat detail ===
-    logam_opsi = {
-        "Arsen (As)": 0.01,
-        "Kadmium (Cd)": 0.003,
-        "Kromium (Cr)": 0.05,
-        "Raksa (Hg)": 0.001,
-        "Timbal (Pb)": 0.01,
-        "Selenium (Se)": 0.01,
-        "Antimon (Sb)": 0.02,
-        "Barium (Ba)": 0.7,
-        "Boron (B)": 0.5,
-        "Besi (Fe)": 0.3,
-        "Mangan (Mn)": 0.1,
-        "Nikel (Ni)": 0.07,
-        "Tembaga (Cu)": 2.0,
-        "Seng (Zn)": 3.0,
-        "Aluminium (Al)": 0.2,
-    }
-
-    st.markdown("**Masukkan hasil analisis logam berat (jika ada):**", unsafe_allow_html=True)
-    jenis_logam_dipilih = st.multiselect("Pilih logam berat yang terdeteksi dalam sampel", list(logam_opsi.keys()))
-
-    input_logam_berat = {}
-    for logam in jenis_logam_dipilih:
-        input_logam_berat[logam] = st.number_input(f"Kadar {logam} (mg/L)", min_value=0.0, step=0.001, format="%.3f")
 
     submitted = st.form_submit_button("🔍 Analisis Sekarang")
 
@@ -158,18 +161,15 @@ if submitted:
         pelanggaran += 1
         catatan.append("TDS melebihi ambang batas (≤ 500 mg/L)")
 
-    # Tambahan: pengecekan logam berat
-    for logam, nilai in input_logam_berat.items():
-        ambang = logam_opsi[logam]
+    for logam, (nilai, ambang) in kadar_logam_input.items():
         if nilai > ambang:
             pelanggaran += 1
-            catatan.append(f"{logam} melebihi ambang batas ({nilai} mg/L > {ambang} mg/L)")
+            catatan.append(f"{logam} melebihi ambang batas ({nilai} > {ambang} mg/L)")
 
     if ecoli != 0.0 and ecoli > 0:
         pelanggaran += 1
         catatan.append("E-Coli terdeteksi (> 0 JML/100mL)")
 
-    # === Status Berdasarkan Jumlah Parameter yang Melanggar ===
     if pelanggaran == 0:
         status, color = "💚 Baik", "rgba(46, 204, 113, 0.75)"
     elif pelanggaran <= 2:
