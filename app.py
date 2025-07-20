@@ -31,6 +31,8 @@ with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP
     ### 🧠 Apa itu Indeks Pencemaran Air?
     Indeks Pencemaran Air (IPA) adalah indikator untuk mengetahui tingkat pencemaran suatu badan air berdasarkan parameter fisik, kimia, dan biologi. IPA digunakan untuk menentukan status mutu air: **Baik**, **Sedang**, **Tercemar**, atau **Sangat Tercemar**.
 
+    ---
+    
     #### 📌 Referensi:
     - **PP No. 22 Tahun 2021** tentang Perlindungan & Pengelolaan Lingkungan
     - **PP No. 20 Tahun 1990** tentang Pengendalian Pencemaran Air
