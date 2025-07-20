@@ -1,7 +1,7 @@
-# ... bagian import & background tetap sama ...
 import streamlit as st
 import base64
 
+# === Background Gambar ===
 def set_background(image_path):
     with open(image_path, "rb") as image_file:
         encoded = base64.b64encode(image_file.read()).decode()
@@ -17,34 +17,17 @@ def set_background(image_path):
     """
     st.markdown(css, unsafe_allow_html=True)
 
-st.markdown("""
-    <style>
-    .main-container {
-        background-color: rgba(0, 0, 0, 0.55);
-        padding: 25px;
-        border-radius: 15px;
-        color: white;
-        margin-top: 20px;
-    }
-    .main-container h2, .main-container h3, .main-container h4,
-    .main-container p, .main-container li {
-        color: white !important;
-    }
-    .stApp h1 {
-        background-color: transparent;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
+# Pasang gambar background
 set_background("kurakura.png")
 
+# === Judul Aplikasi ===
 st.markdown("<h1 style='text-align:center; color:white;'>💧 Indeks Pencemaran Air</h1>", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
-st.markdown("<div class='main-container'>", unsafe_allow_html=True)
 
-# === Panel penjelasan ===
+# === Panel Penjelasan ===
 with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP No. 22/2021, PP No. 20/1990, SNI)"):
     st.markdown("""
+    <div style='color:white'>
     ### 🧠 Apa itu Indeks Pencemaran Air?
     Indeks Pencemaran Air (IPA) adalah indikator untuk mengetahui tingkat pencemaran suatu badan air berdasarkan parameter fisik, kimia, dan biologi. IPA digunakan untuk menentukan status mutu air: **Baik**, **Sedang**, **Tercemar**, atau **Sangat Tercemar**.
 
@@ -89,10 +72,10 @@ with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP
         - Cr⁶⁺: < 0.05 mg/L
 
     **8. E-Coli**  
-    - Parameter E. coli mengacu pada uji keberadaan dan jumlah bakteri *Escherichia coli* dalam suatu sampel air atau makanan.  
-    - E. coli adalah bakteri indikator yang menunjukkan adanya pencemaran oleh limbah tinja, dan bisa menjadi penyebab penyakit seperti diare jika terdapat dalam jumlah tinggi.  
+    - Bakteri indikator pencemaran limbah tinja  
     - 💡 Baku mutu: **0 JML/100 mL**
-    """)
+    </div>
+    """, unsafe_allow_html=True)
 
 # === Input Form ===
 with st.form("form_input"):
@@ -168,13 +151,10 @@ if submitted:
         </div>
     """, unsafe_allow_html=True)
 
-# === Tutup Container ===
-st.markdown("</div>", unsafe_allow_html=True)
-
 # === Footer ===
 st.markdown("""
 <hr style="border:0.5px solid white">
 <p style="text-align:center; color:lightgrey;">
-    © 2025 | Dibuat oleh Mahasiswa Peduli Lingkungan 💧
+    Disusub oleh Kelompok 11 Logika dan Pemrograman Komputer 
 </p>
 """, unsafe_allow_html=True)
