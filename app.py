@@ -70,9 +70,9 @@ with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP
     - Padatan terlarut (garam, logam, mineral)  
     - 💡 Baku mutu: **≤ 500 mg/L**
 
-    **8. Logam Berat (Pb, Hg, Cr, Cd, dll)**  
+    **8. Logam Berat (Pb, Hg, Cr, Cd)**  
     - Toksik dalam konsentrasi kecil  
-    - 💡 Contoh ambang batas air minum:
+    - 💡 Ambang batas (contoh air minum):
         - Pb ≤ 0.01 mg/L, Hg ≤ 0.001 mg/L, Cr ≤ 0.05 mg/L, dll.
 
     **9. E-Coli**  
@@ -97,8 +97,9 @@ with st.form("form_input"):
         tss = st.number_input("TSS (mg/L)", step=0.1, format="%.2f")
         ecoli = st.number_input("E-Coli (Jumlah/100mL)", step=1.0, format="%.0f")
 
-    st.markdown("### 🧪 Logam Berat")
-    logam_opsi = {
+    # === Input Logam Berat Berdasarkan Pilihan ===
+    st.markdown("### 🧪 Pilih dan Masukkan Nilai Logam Berat")
+    ambang_logam = {
         "Arsen (As)": 0.01,
         "Kadmium (Cd)": 0.003,
         "Kromium (Cr)": 0.05,
@@ -116,17 +117,16 @@ with st.form("form_input"):
         "Aluminium (Al)": 0.2
     }
 
-    selected_logams = st.multiselect("Pilih jenis logam berat yang terdeteksi:", list(logam_opsi.keys()))
+    dipilih_logam = st.multiselect("Pilih jenis logam berat:", list(ambang_logam.keys()))
     kadar_logam_input = {}
-
-    for logam in selected_logams:
-        ambang = logam_opsi[logam]
-        kadar = st.number_input(f"Kadar {logam} (mg/L) - Ambang: {ambang}", min_value=0.0, step=0.001, format="%.3f")
-        kadar_logam_input[logam] = (kadar, ambang)
+    for logam in dipilih_logam:
+        ambang = ambang_logam[logam]
+        nilai = st.number_input(f"{logam} (Ambang ≤ {ambang} mg/L)", min_value=0.0, step=0.001, format="%.3f")
+        kadar_logam_input[logam] = (nilai, ambang)
 
     submitted = st.form_submit_button("🔍 Analisis Sekarang")
 
-# === Analisis ===
+# === Perhitungan Berdasarkan Baku Mutu ===
 if submitted:
     pelanggaran = 0
     catatan = []
@@ -134,34 +134,41 @@ if submitted:
     if ph != 0.0 and (ph < 6.5 or ph > 8.5):
         pelanggaran += 1
         catatan.append("pH di luar rentang aman (6.5 - 8.5)")
+
     if suhu != 0.0 and suhu > 30:
         pelanggaran += 1
         catatan.append("Suhu naik lebih dari 3°C dari suhu alami")
+
     if do != 0.0 and do < 5:
         pelanggaran += 1
         catatan.append("DO kurang dari 5 mg/L")
+
     if bod != 0.0 and bod > 3:
         pelanggaran += 1
         catatan.append("BOD lebih dari 3 mg/L")
+
     if cod != 0.0 and cod > 10:
         pelanggaran += 1
         catatan.append("COD lebih dari 10 mg/L")
+
     if tss != 0.0 and tss > 50:
         pelanggaran += 1
         catatan.append("TSS lebih dari 50 mg/L")
+
     if tds != 0.0 and tds > 500:
         pelanggaran += 1
         catatan.append("TDS melebihi ambang batas (≤ 500 mg/L)")
-    if ecoli != 0.0 and ecoli > 0:
-        pelanggaran += 1
-        catatan.append("E-Coli terdeteksi (> 0 JML/100mL)")
 
     for logam, (nilai, ambang) in kadar_logam_input.items():
         if nilai > ambang:
             pelanggaran += 1
             catatan.append(f"{logam} melebihi ambang batas ({nilai} > {ambang} mg/L)")
 
-    # Status Akhir
+    if ecoli != 0.0 and ecoli > 0:
+        pelanggaran += 1
+        catatan.append("E-Coli terdeteksi (> 0 JML/100mL)")
+
+    # === Status Berdasarkan Jumlah Parameter yang Melanggar ===
     if pelanggaran == 0:
         status, color = "💚 Baik", "rgba(46, 204, 113, 0.75)"
     elif pelanggaran <= 2:
