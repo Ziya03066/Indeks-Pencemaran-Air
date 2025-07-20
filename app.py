@@ -41,15 +41,17 @@ with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP
     ### 📊 Parameter Kualitas Air & Baku Mutunya:
 
     **1. pH (Keasaman)**  
-    - Mengukur keseimbangan asam-basa air  
+    - Ukuran tingkat keasaman atau kebasaan air.
+    - Skala pH berkisar dari 0 hingga 14, di mana pH 7 adalah netral, pH di bawah 7 adalah asam, dan pH di atas 7 adalah basa (alkali).
     - 💡 Baku mutu: **6.5 - 8.5**
 
     **2. Suhu**  
-    - Mempengaruhi kelarutan oksigen  
+    - Ukuran tingkat panas atau dinginnya air.
+    - Mempengaruhi kelarutan oksigen.
     - 💡 Baku mutu: Maks. kenaikan 3°C dari suhu alami
 
     **3. DO (Oksigen Terlarut)**  
-    - Dibutuhkan makhluk hidup air  
+    -  Jumlah gas oksigen (O2) yang terlarut di dalam air dan tersedia untuk digunakan oleh organisme akuatik.   
     - 💡 Baku mutu: **> 5 mg/L**
 
     **4. BOD (Biochemical Oxygen Demand)**  
@@ -65,14 +67,27 @@ with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP
     - 💡 Baku mutu: **< 50 mg/L**
 
     **7. Logam Berat (Pb, Hg, Cr, Cd)**  
-    - Zat beracun berbahaya bahkan pada dosis kecil  
-    - 💡 Contoh ambang batas:
-        - Pb: < 0.03 mg/L  
-        - Hg: < 0.002 mg/L  
-        - Cr⁶⁺: < 0.05 mg/L
+    - kelompok unsur kimia dengan densitas yang relatif tinggi dan bersifat toksik atau beracun pada konsentrasi rendah. 
+    = Ambang batas logam berat ini sangat bervariasi dan diatur berdasarkan peruntukan airnya. Artinya, standar untuk air yang akan diminum tentu akan jauh lebih ketat dibandingkan dengan air yang digunakan untuk irigasi pertanian atau air yang boleh dibuang sebagai limbah.
+    - 💡 Contoh ambang batas pada Air Minum:
+        - Arsen (As) ≤ 0,01
+        - Kadmium (Cd) ≤ 0,003
+        - Kromium (Cr) ≤ 0,05
+        - Raksa (Hg) ≤ 0,001
+        - Timbal (Pb) ≤ 0,01
+        - Selenium (Se) ≤ 0,01
+        - Antimon (Sb) ≤ 0,02
+        - Barium (Ba) ≤ 0,7
+        - Boron (B) ≤ 0,5
+        - Besi (Fe) ≤ 0,3
+        - Mangan (Mn) ≤ 0,1
+        - Nikel (Ni) ≤ 0,07
+        - Tembaga (Cu) ≤ 2
+        - Seng (Zn) ≤ 3
+        - Aluminium (Al) ≤ 0,2
 
     **8. E-Coli**  
-    - Bakteri indikator pencemaran limbah tinja  
+    - Bakteri indikator adanya cemaran tinja yang berpotensi membawa agen penyakit berbahaya bagi kesehatan manusia.
     - 💡 Baku mutu: **0 JML/100 mL**
     </div>
     """, unsafe_allow_html=True)
