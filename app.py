@@ -1,14 +1,14 @@
 import streamlit as st
 import base64
 
-# === Background Gambar ===
+# === Gambar Latar Belakang ===
 def set_background(image_path):
     with open(image_path, "rb") as image_file:
         encoded = base64.b64encode(image_file.read()).decode()
     css = f"""
     <style>
     .stApp {{
-        background-image: url("data:image/jpg;base64,{encoded}");
+        background-image: url("data:image/png;base64,{encoded}");
         background-size: cover;
         background-attachment: fixed;
         background-repeat: no-repeat;
@@ -24,14 +24,63 @@ st.markdown("<h1 style='text-align:center; color:white;'>💧 Indeks Pencemaran 
 st.markdown("<br>", unsafe_allow_html=True)
 
 # === Penjelasan ===
-with st.expander("📘 Penjelasan Indeks Pencemaran Air"):
+with st.expander("📘 Penjelasan Lengkap Parameter Kualitas Air"):
     st.markdown("""
     <div style='color:white'>
-    Indeks Pencemaran Air (IPA) adalah indikator kualitas air berdasarkan parameter fisik, kimia, dan biologi. Status mutu air ditentukan berdasarkan ambang batas PP No. 22/2021, PP No. 20/1990, dan SNI.
+    **Indeks Pencemaran Air (IPA)** digunakan untuk menilai mutu suatu badan air berdasarkan parameter fisik, kimia, dan mikrobiologi.  
+    IPA membantu menentukan apakah air tersebut masih aman untuk digunakan atau sudah tercemar.  
+
+    ### ⚙️ Penjelasan Parameter:
+    
+    - **pH (Keasaman)**  
+      Mengukur tingkat keasaman atau kebasaan air.  
+      💡 *Baku Mutu*: **6.5 – 8.5**  
+      📌 pH terlalu rendah atau tinggi mempengaruhi kehidupan organisme air.
+      
+    - **Suhu**  
+      Mempengaruhi kelarutan oksigen dan proses biologis.  
+      💡 *Baku Mutu*: Kenaikan tidak boleh > **3°C** dari suhu alami (27°C)  
+
+    - **DO (Dissolved Oxygen)**  
+      Kandungan oksigen terlarut yang diperlukan makhluk hidup air.  
+      💡 *Baku Mutu*: **> 5 mg/L**  
+      📌 Semakin rendah DO, semakin buruk kualitas air.
+
+    - **BOD (Biochemical Oxygen Demand)**  
+      Jumlah oksigen yang dibutuhkan mikroorganisme untuk menguraikan bahan organik.  
+      💡 *Baku Mutu*: **< 3 mg/L**  
+      📌 BOD tinggi menandakan banyak polutan organik.
+
+    - **COD (Chemical Oxygen Demand)**  
+      Jumlah oksigen yang dibutuhkan untuk oksidasi kimia semua zat dalam air.  
+      💡 *Baku Mutu*: **< 10 mg/L**
+
+    - **TSS (Total Suspended Solids)**  
+      Jumlah padatan tersuspensi dalam air.  
+      💡 *Baku Mutu*: **< 50 mg/L**  
+      📌 TSS tinggi dapat merusak habitat dan mengganggu penetrasi cahaya.
+
+    - **TDS (Total Dissolved Solids)**  
+      Jumlah padatan terlarut dalam air seperti garam dan logam.  
+      💡 *Baku Mutu*: **≤ 500 mg/L**  
+
+    - **E-Coli**  
+      Indikator kontaminasi feses.  
+      💡 *Baku Mutu*: **0 JML/100 mL**  
+      📌 Menandakan air tercemar oleh limbah manusia atau hewan.
+
+    - **Logam Berat**  
+      Zat toksik dalam jumlah kecil yang berbahaya bagi tubuh.  
+      💡 *Baku Mutu* bervariasi tergantung jenis logam, misalnya:  
+        - Timbal (Pb): ≤ 0.01 mg/L  
+        - Raksa (Hg): ≤ 0.001 mg/L  
+        - Kromium (Cr): ≤ 0.05 mg/L  
+        - Kadmium (Cd): ≤ 0.003 mg/L  
+
     </div>
     """, unsafe_allow_html=True)
 
-# === Ambang batas logam berat ===
+# === Ambang Batas Logam Berat ===
 ambang_logam = {
     "Arsen (As)": 0.01,
     "Kadmium (Cd)": 0.003,
@@ -50,11 +99,11 @@ ambang_logam = {
     "Aluminium (Al)": 0.2
 }
 
-# === Form Input ===
+# === Input Parameter ===
 with st.form("form_input"):
     col1, col2 = st.columns(2)
     with col1:
-        ph = st.number_input("pH", min_value=0.0, max_value=14.0, step=0.1, format="%.2f")
+        ph = st.number_input("pH", 0.0, 14.0, step=0.1, format="%.2f")
         suhu = st.number_input("Suhu (°C)", step=0.1, format="%.2f")
         do = st.number_input("DO (mg/L)", step=0.1, format="%.2f")
         bod = st.number_input("BOD (mg/L)", step=0.1, format="%.2f")
@@ -62,17 +111,17 @@ with st.form("form_input"):
     with col2:
         cod = st.number_input("COD (mg/L)", step=0.1, format="%.2f")
         tss = st.number_input("TSS (mg/L)", step=0.1, format="%.2f")
-        ecoli = st.number_input("E-Coli (/100mL)", step=1.0, format="%.0f")
+        ecoli = st.number_input("E-Coli (Jumlah/100mL)", step=1.0, format="%.0f")
 
-    selected_logam = st.multiselect("Pilih Logam Berat Terdeteksi", list(ambang_logam.keys()))
+    selected_logam = st.multiselect("Pilih Logam Berat yang Terdeteksi", list(ambang_logam.keys()))
     kadar_logam_input = {}
     for logam in selected_logam:
         kadar = st.number_input(f"Kadar {logam} (mg/L)", step=0.001, format="%.3f", key=logam)
         kadar_logam_input[logam] = (kadar, ambang_logam[logam])
 
-    submitted = st.form_submit_button("🔬 Analisis Kualitas Air")
+    submitted = st.form_submit_button("🔍 Analisis")
 
-# === Analisis ===
+# === Proses Analisis ===
 if submitted:
     pelanggaran = 0
     catatan = []
@@ -105,16 +154,15 @@ if submitted:
         pelanggaran += 1
         catatan.append("TDS melebihi ambang batas (≤ 500 mg/L)")
 
-    for logam, (nilai, ambang) in kadar_logam_input.items():
-        if nilai != 0.0 and nilai > ambang:
-            pelanggaran += 1
-            catatan.append(f"{logam} melebihi ambang batas ({nilai} > {ambang} mg/L)")
-
     if ecoli != 0.0 and ecoli > 0:
         pelanggaran += 1
         catatan.append("E-Coli terdeteksi (> 0 JML/100mL)")
 
-    # === Hasil Status
+    for logam, (nilai, ambang) in kadar_logam_input.items():
+        if nilai > ambang:
+            pelanggaran += 1
+            catatan.append(f"{logam} melebihi ambang batas ({nilai} > {ambang} mg/L)")
+
     if pelanggaran == 0:
         status, color = "💚 Baik", "rgba(46, 204, 113, 0.75)"
     elif pelanggaran <= 2:
@@ -125,12 +173,12 @@ if submitted:
         status, color = "🔴 Sangat Tercemar", "rgba(231, 76, 60, 0.75)"
 
     st.markdown(f"""
-        <div style="padding:20px; background-color:{color}; border-radius:12px;">
-            <h3 style="color:white;">Status Kualitas Air: {status}</h3>
-            <ul style="color:white;">
-                {''.join(f"<li>{c}</li>" for c in catatan) if catatan else "<li>Semua parameter dalam batas aman.</li>"}
-            </ul>
-        </div>
+    <div style="padding:20px; background-color:{color}; border-radius:12px;">
+        <h3 style="color:white;">Status Kualitas Air: {status}</h3>
+        <ul style="color:white;">
+            {''.join(f"<li>{c}</li>" for c in catatan) if catatan else "<li>Semua parameter dalam batas aman.</li>"}
+        </ul>
+    </div>
     """, unsafe_allow_html=True)
 
 # === Footer ===
