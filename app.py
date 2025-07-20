@@ -51,28 +51,28 @@ with st.expander("📘 Penjelasan Indeks Pencemaran Air & Parameter Kualitas (PP
     **3. DO (Oksigen Terlarut)**  
     - 💡 Baku mutu: **> 5 mg/L**
 
-    **4. BOD**  
+    **4. BOD (Biochemical Oxygen Demand)**  
     - 💡 Baku mutu: **< 3 mg/L**
 
-    **5. COD**  
+    **5. COD (Chemical Oxygen Demand)**  
     - 💡 Baku mutu: **< 10 mg/L**
 
-    **6. TSS**  
+    **6. TSS (Total Suspended Solid)**  
     - 💡 Baku mutu: **< 50 mg/L**
 
-    **7. TDS**  
+    **7. TDS (Total Dissolved Solids)**  
     - 💡 Baku mutu: **≤ 500 mg/L**
 
-    **8. Logam Berat (Pb, Hg, Cr, Cd, dll)**  
-    - 💡 Contoh ambang batas:
-        - Pb ≤ 0.01, Hg ≤ 0.001, Cr ≤ 0.05
+    **8. Logam Berat**  
+    - 💡 Contoh ambang batas air minum:
+        - Pb ≤ 0.01, Hg ≤ 0.001, Cr ≤ 0.05, Cd ≤ 0.003, dll.
 
     **9. E-Coli**  
     - 💡 Baku mutu: **0 JML/100 mL**
     </div>
     """, unsafe_allow_html=True)
 
-# === Batas Logam Berat (contoh air minum) ===
+# === Batas Logam Berat ===
 ambang_logam = {
     "Arsen (As)": 0.01,
     "Kadmium (Cd)": 0.003,
@@ -86,13 +86,14 @@ ambang_logam = {
     "Besi (Fe)": 0.3,
     "Mangan (Mn)": 0.1,
     "Nikel (Ni)": 0.07,
-    "Tembaga (Cu)": 2.0,
-    "Seng (Zn)": 3.0,
+    "Tembaga (Cu)": 2,
+    "Seng (Zn)": 3,
     "Aluminium (Al)": 0.2
 }
 
 # === Input Form ===
 with st.form("form_input"):
+    st.subheader("🔎 Masukkan Parameter Kualitas Air")
     col1, col2 = st.columns(2)
 
     with col1:
@@ -107,84 +108,80 @@ with st.form("form_input"):
         tss = st.number_input("TSS (mg/L)", step=0.1, format="%.2f")
         ecoli = st.number_input("E-Coli (Jumlah/100mL)", step=1.0, format="%.0f")
 
-    # Input Logam Berat (Multi Select)
-    selected_logam = st.multiselect("Pilih Jenis Logam Berat yang Terdeteksi", list(ambang_logam.keys()))
+    # === Pilih logam berat ===
+    st.markdown("### ⚙️ Pilih Jenis Logam Berat Terkandung:")
+    jenis_logam = st.multiselect("Pilih logam berat:", list(ambang_logam.keys()))
 
     kadar_logam_input = {}
-    for logam in selected_logam:
-        kadar = st.number_input(f"Kadar {logam} (mg/L)", step=0.001, format="%.3f", key=logam)
-        kadar_logam_input[logam] = (kadar, ambang_logam[logam])
+    if jenis_logam:
+        st.markdown("### 🧪 Masukkan Nilai Kadar Logam (mg/L):")
+        for logam in jenis_logam:
+            kadar = st.number_input(f"{logam} (Ambang batas: {ambang_logam[logam]} mg/L)", min_value=0.0, step=0.001, format="%.4f")
+            kadar_logam_input[logam] = kadar
 
-    submitted = st.form_submit_button("Tampilkan Nilai Kadar")
+    submitted = st.form_submit_button("🔬 Analisis Kualitas Air")
 
-# === Menampilkan Nilai & Tombol Analisis ===
+# === Hasil Analisis ===
 if submitted:
-    if kadar_logam_input:
-        st.markdown("### 💡 Nilai Kadar Logam Berat yang Diinput:")
-        for logam, (nilai, ambang) in kadar_logam_input.items():
-            st.markdown(f"- **{logam}**: {nilai} mg/L (Ambang batas: {ambang} mg/L)")
+    pelanggaran = 0
+    catatan = []
 
-    lanjut_analisis = st.button("🔬 Lanjutkan Analisis Kualitas Air")
+    if ph != 0.0 and (ph < 6.5 or ph > 8.5):
+        pelanggaran += 1
+        catatan.append("pH di luar rentang aman (6.5 - 8.5)")
 
-    if lanjut_analisis:
-        pelanggaran = 0
-        catatan = []
+    if suhu != 0.0 and suhu > 30:
+        pelanggaran += 1
+        catatan.append("Suhu naik lebih dari 3°C dari suhu alami")
 
-        if ph != 0.0 and (ph < 6.5 or ph > 8.5):
+    if do != 0.0 and do < 5:
+        pelanggaran += 1
+        catatan.append("DO kurang dari 5 mg/L")
+
+    if bod != 0.0 and bod > 3:
+        pelanggaran += 1
+        catatan.append("BOD lebih dari 3 mg/L")
+
+    if cod != 0.0 and cod > 10:
+        pelanggaran += 1
+        catatan.append("COD lebih dari 10 mg/L")
+
+    if tss != 0.0 and tss > 50:
+        pelanggaran += 1
+        catatan.append("TSS lebih dari 50 mg/L")
+
+    if tds != 0.0 and tds > 500:
+        pelanggaran += 1
+        catatan.append("TDS melebihi ambang batas (≤ 500 mg/L)")
+
+    for logam, kadar in kadar_logam_input.items():
+        ambang = ambang_logam[logam]
+        if kadar > ambang:
             pelanggaran += 1
-            catatan.append("pH di luar rentang aman (6.5 - 8.5)")
+            catatan.append(f"{logam} melebihi ambang batas ({kadar} > {ambang} mg/L)")
 
-        if suhu != 0.0 and suhu > 30:
-            pelanggaran += 1
-            catatan.append("Suhu naik lebih dari 3°C dari suhu alami")
+    if ecoli != 0.0 and ecoli > 0:
+        pelanggaran += 1
+        catatan.append("E-Coli terdeteksi (> 0 JML/100mL)")
 
-        if do != 0.0 and do < 5:
-            pelanggaran += 1
-            catatan.append("DO kurang dari 5 mg/L")
+    # === Status Berdasarkan Jumlah Parameter yang Melanggar ===
+    if pelanggaran == 0:
+        status, color = "💚 Baik", "rgba(46, 204, 113, 0.75)"
+    elif pelanggaran <= 2:
+        status, color = "🟡 Sedang", "rgba(244, 208, 63, 0.75)"
+    elif pelanggaran <= 4:
+        status, color = "🟠 Tercemar", "rgba(230, 126, 34, 0.75)"
+    else:
+        status, color = "🔴 Sangat Tercemar", "rgba(231, 76, 60, 0.75)"
 
-        if bod != 0.0 and bod > 3:
-            pelanggaran += 1
-            catatan.append("BOD lebih dari 3 mg/L")
-
-        if cod != 0.0 and cod > 10:
-            pelanggaran += 1
-            catatan.append("COD lebih dari 10 mg/L")
-
-        if tss != 0.0 and tss > 50:
-            pelanggaran += 1
-            catatan.append("TSS lebih dari 50 mg/L")
-
-        if tds != 0.0 and tds > 500:
-            pelanggaran += 1
-            catatan.append("TDS melebihi ambang batas (≤ 500 mg/L)")
-
-        for logam, (nilai, ambang) in kadar_logam_input.items():
-            if nilai > ambang:
-                pelanggaran += 1
-                catatan.append(f"{logam} melebihi ambang batas ({nilai} > {ambang} mg/L)")
-
-        if ecoli != 0.0 and ecoli > 0:
-            pelanggaran += 1
-            catatan.append("E-Coli terdeteksi (> 0 JML/100mL)")
-
-        # === Status Berdasarkan Jumlah Parameter yang Melanggar ===
-        if pelanggaran == 0:
-            status, color = "💚 Baik", "rgba(46, 204, 113, 0.75)"
-        elif pelanggaran <= 2:
-            status, color = "🟡 Sedang", "rgba(244, 208, 63, 0.75)"
-        elif pelanggaran <= 4:
-            status, color = "🟠 Tercemar", "rgba(230, 126, 34, 0.75)"
-        else:
-            status, color = "🔴 Sangat Tercemar", "rgba(231, 76, 60, 0.75)"
-
-        st.markdown(f"""
-            <div style="padding:20px; background-color:{color}; border-radius:12px;">
-                <h3 style="color:white;">Status Kualitas Air: {status}</h3>
-                <ul style="color:white;">
-                    {''.join(f"<li>{c}</li>" for c in catatan) if catatan else "<li>Semua parameter dalam batas aman.</li>"}
-                </ul>
-            </div>
-        """, unsafe_allow_html=True)
+    st.markdown(f"""
+        <div style="padding:20px; background-color:{color}; border-radius:12px;">
+            <h3 style="color:white;">Status Kualitas Air: {status}</h3>
+            <ul style="color:white;">
+                {''.join(f"<li>{c}</li>" for c in catatan) if catatan else "<li>Semua parameter dalam batas aman.</li>"}
+            </ul>
+        </div>
+    """, unsafe_allow_html=True)
 
 # === Footer ===
 st.markdown("""
